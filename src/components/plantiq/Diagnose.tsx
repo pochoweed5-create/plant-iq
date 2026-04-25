@@ -1,7 +1,8 @@
 import { useRef, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { diagnosePlant } from "@/utils/diagnose.functions";
-import { Upload, Loader2, AlertTriangle, CheckCircle2, Clock, Sparkles, RotateCcw, Sun, Focus, Crop, Leaf } from "lucide-react";
+import { Upload, Loader2, AlertTriangle, CheckCircle2, Clock, Sparkles, RotateCcw, Sun, Focus, Crop, Leaf, Camera } from "lucide-react";
+import { PhotoGuide } from "./PhotoGuide";
 
 type Result = Awaited<ReturnType<typeof diagnosePlant>>;
 
@@ -54,6 +55,7 @@ export function Diagnose() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<Result | null>(null);
   const [checked, setChecked] = useState<Record<string, boolean>>({});
+  const [guideOpen, setGuideOpen] = useState(false);
   const diagnose = useServerFn(diagnosePlant);
 
   const allChecked = checklistItems.every((i) => checked[i.key]);
@@ -115,9 +117,19 @@ export function Diagnose() {
                       <span className="text-[11px] uppercase tracking-[0.18em] text-gold">
                         Antes de subir · checklist
                       </span>
-                      <span className="text-[11px] text-muted-foreground tabular-nums">
-                        {checklistItems.filter((i) => checked[i.key]).length}/{checklistItems.length}
-                      </span>
+                      <div className="flex items-center gap-3">
+                        <button
+                          type="button"
+                          onClick={() => setGuideOpen(true)}
+                          className="inline-flex items-center gap-1.5 text-[11px] uppercase tracking-wider text-gold hover:text-gold/80 transition-smooth"
+                        >
+                          <Camera className="h-3.5 w-3.5" />
+                          Ver guía
+                        </button>
+                        <span className="text-[11px] text-muted-foreground tabular-nums">
+                          {checklistItems.filter((i) => checked[i.key]).length}/{checklistItems.length}
+                        </span>
+                      </div>
                     </div>
                     <ul className="grid sm:grid-cols-2 gap-2">
                       {checklistItems.map(({ key, icon: Icon, title, hint }) => {
