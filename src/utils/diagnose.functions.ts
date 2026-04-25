@@ -11,6 +11,13 @@ type DiagnosisResult = {
   steps: string[];
   recovery: string;
   elkar: string;
+  reminders: Array<{
+    type: "riego" | "fertilizacion" | "revision" | "tratamiento";
+    title: string;
+    detail: string;
+    inDays: number;
+    repeatEveryDays?: number;
+  }>;
 } | { ok: false; error: string };
 
 export const diagnosePlant = createServerFn({ method: "POST" })
@@ -45,6 +52,22 @@ FORMATO OBLIGATORIO — devuelve EXCLUSIVAMENTE vía la función "report_diagnos
 6. recovery: tiempo estimado realista (ej: "5-10 días si actúas hoy").
 7. elkar: 1-2 frases de mentor que motiven y resuman la prioridad.`;
 
+    const remindersGuide = `
+
+RECORDATORIOS (campo "reminders"):
+Genera entre 3 y 5 recordatorios accionables que conviertan el diagnóstico en hábitos. Cada uno con:
+- type: uno de "riego" | "fertilizacion" | "revision" | "tratamiento".
+- title: muy corto (ej: "Riego ligero", "Aplicar cal-mag", "Revisar evolución").
+- detail: 1 frase concreta con cantidad/método (ej: "Riega 200ml por maceta, agua a pH 6.2").
+- inDays: días desde hoy hasta la primera ejecución (0 = hoy).
+- repeatEveryDays (opcional): cada cuántos días repetir (ej: 3 para riego cíclico). Omitir si es tarea única.
+
+Reglas:
+- Incluye SIEMPRE al menos un recordatorio de "revision" para evaluar la evolución.
+- Ajusta la frecuencia de riego según la causa (estrés hídrico, exceso, normal).
+- Si la causa es nutricional, incluye un recordatorio de "fertilizacion" con producto/ratio orientativo.
+- Convierte los pasos del tratamiento en recordatorios "tratamiento" cuando tengan tiempo asociado.`;
+
     const userText = data.note
       ? `Analiza esta planta y diagnostica el problema más probable siguiendo tu protocolo. Contexto del cultivador: ${data.note}`
       : "Analiza esta planta y diagnostica el problema más probable siguiendo tu protocolo. Sin contexto adicional del cultivador.";
@@ -59,7 +82,7 @@ FORMATO OBLIGATORIO — devuelve EXCLUSIVAMENTE vía la función "report_diagnos
         body: JSON.stringify({
           model: "google/gemini-2.5-flash",
           messages: [
-            { role: "system", content: systemPrompt },
+            { role: "system", content: systemPrompt + remindersGuide },
             {
               role: "user",
               content: [
@@ -90,8 +113,24 @@ FORMATO OBLIGATORIO — devuelve EXCLUSIVAMENTE vía la función "report_diagnos
                     },
                     recovery: { type: "string", description: "Tiempo estimado de recuperación, ej: 7-14 días" },
                     elkar: { type: "string", description: "Mensaje breve de ELKAR (1-2 frases) en tono mentor" },
+                    reminders: {
+                      type: "array",
+                      description: "3-5 recordatorios accionables generados a partir del diagnóstico.",
+                      items: {
+                        type: "object",
+                        properties: {
+                          type: { type: "string", enum: ["riego", "fertilizacion", "revision", "tratamiento"] },
+                          title: { type: "string", description: "Título corto del recordatorio" },
+                          detail: { type: "string", description: "Acción concreta en 1 frase" },
+                          inDays: { type: "number", description: "Días desde hoy hasta la primera ejecución" },
+                          repeatEveryDays: { type: "number", description: "Repetición en días (opcional)" },
+                        },
+                        required: ["type", "title", "detail", "inDays"],
+                        additionalProperties: false,
+                      },
+                    },
                   },
-                  required: ["plant", "problem", "severity", "urgency", "cause", "explanation", "steps", "recovery", "elkar"],
+                  required: ["plant", "problem", "severity", "urgency", "cause", "explanation", "steps", "recovery", "elkar", "reminders"],
                   additionalProperties: false,
                 },
               },
