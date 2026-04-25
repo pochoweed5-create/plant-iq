@@ -434,6 +434,92 @@ export function Diagnose() {
                     </Section>
                   )}
 
+                  {/* Plan nutricional por etapa */}
+                  {result.nutritionPlan && (
+                    <Section index={7} label="Plan nutricional por etapa">
+                      {(() => {
+                        const np = result.nutritionPlan;
+                        const stage = stageMeta[np.stage] ?? stageMeta.desconocida;
+                        return (
+                          <div className="space-y-3">
+                            <div className="flex flex-wrap items-center gap-2">
+                              <span className={`inline-flex items-center gap-1.5 text-[11px] uppercase tracking-wider px-2.5 py-1 rounded-full border ${stage.tone}`}>
+                                <Sprout className="h-3 w-3" />
+                                {stage.label}
+                              </span>
+                              {np.medium && np.medium !== "desconocido" ? (
+                                <span className="text-[10px] uppercase tracking-wider text-muted-foreground border border-border/60 rounded-full px-2 py-0.5">
+                                  Medio · {np.medium}
+                                </span>
+                              ) : null}
+                              {np.targetEC ? (
+                                <span className="inline-flex items-center gap-1 text-[10px] text-muted-foreground border border-border/60 rounded-full px-2 py-0.5">
+                                  <Gauge className="h-3 w-3" /> EC {np.targetEC}
+                                </span>
+                              ) : null}
+                              {np.targetPH ? (
+                                <span className="inline-flex items-center gap-1 text-[10px] text-muted-foreground border border-border/60 rounded-full px-2 py-0.5">
+                                  <Beaker className="h-3 w-3" /> pH {np.targetPH}
+                                </span>
+                              ) : null}
+                            </div>
+
+                            <p className="text-xs text-muted-foreground leading-relaxed">{np.stageNote}</p>
+
+                            <ul className="space-y-2">
+                              {np.products.map((p, i) => (
+                                <li
+                                  key={i}
+                                  className="rounded-xl border border-border/60 bg-card/40 p-3 sm:p-4 flex gap-3"
+                                >
+                                  <span className="flex-shrink-0 h-9 w-9 rounded-full border border-emerald-400/30 bg-emerald-500/10 text-emerald-300 flex items-center justify-center">
+                                    <FlaskRound className="h-4 w-4" />
+                                  </span>
+                                  <div className="min-w-0 flex-1">
+                                    <div className="flex items-center gap-2 flex-wrap">
+                                      <span className="text-sm font-medium text-foreground leading-snug">{p.name}</span>
+                                      <span className="text-[10px] uppercase tracking-wider text-muted-foreground border border-border/60 rounded-full px-1.5 py-0.5">
+                                        {roleLabel[p.role] ?? p.role}
+                                      </span>
+                                    </div>
+                                    <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-[12.5px]">
+                                      <span className="inline-flex items-center gap-1 text-gold">
+                                        <span className="text-[10px] uppercase tracking-wider text-muted-foreground">Dosis</span>
+                                        <span className="font-medium tabular-nums">{p.dose}</span>
+                                      </span>
+                                      <span className="inline-flex items-center gap-1 text-foreground/85">
+                                        <span className="text-[10px] uppercase tracking-wider text-muted-foreground">Frecuencia</span>
+                                        <span>{p.frequency}</span>
+                                      </span>
+                                    </div>
+                                    {p.note ? (
+                                      <p className="text-[11.5px] text-muted-foreground italic leading-relaxed mt-1">{p.note}</p>
+                                    ) : null}
+                                  </div>
+                                </li>
+                              ))}
+                            </ul>
+
+                            {np.warnings && np.warnings.length > 0 && (
+                              <ul className="space-y-1.5 pt-1">
+                                {np.warnings.map((w, i) => (
+                                  <li key={i} className="flex gap-2 text-[11.5px] text-amber-200/90 leading-relaxed">
+                                    <AlertCircle className="h-3.5 w-3.5 flex-shrink-0 mt-0.5 text-amber-300" />
+                                    <span>{w}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            )}
+
+                            <p className="text-[10.5px] text-muted-foreground italic">
+                              Dosis orientativas. Ajusta según las indicaciones de tu línea de nutrientes y la respuesta de la planta.
+                            </p>
+                          </div>
+                        );
+                      })()}
+                    </Section>
+                  )}
+
                   {/* Guardar planta (simulado) */}
                   <div className="pt-2">
                     <button
