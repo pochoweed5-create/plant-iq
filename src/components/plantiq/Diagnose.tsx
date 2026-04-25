@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { diagnosePlant } from "@/utils/diagnose.functions";
 import { Upload, Loader2, AlertTriangle, CheckCircle2, Clock, Sparkles, RotateCcw, Sun, Focus, Crop, Leaf, Camera } from "lucide-react";
+import { Bookmark, BookmarkCheck } from "lucide-react";
 import { PhotoGuide } from "./PhotoGuide";
 
 type Result = Awaited<ReturnType<typeof diagnosePlant>>;
@@ -56,6 +57,8 @@ export function Diagnose() {
   const [result, setResult] = useState<Result | null>(null);
   const [checked, setChecked] = useState<Record<string, boolean>>({});
   const [guideOpen, setGuideOpen] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const [saving, setSaving] = useState(false);
   const diagnose = useServerFn(diagnosePlant);
 
   const allChecked = checklistItems.every((i) => checked[i.key]);
@@ -89,7 +92,19 @@ export function Diagnose() {
     setResult(null);
     setNote("");
     setChecked({});
+    setSaved(false);
+    setSaving(false);
     if (inputRef.current) inputRef.current.value = "";
+  }
+
+  function handleSave() {
+    if (saved || saving) return;
+    setSaving(true);
+    // Simulación de guardado — futura versión persistirá en backend
+    setTimeout(() => {
+      setSaving(false);
+      setSaved(true);
+    }, 700);
   }
 
   return (
@@ -318,6 +333,43 @@ export function Diagnose() {
                       <div className="text-[11px] uppercase tracking-wider text-gold mb-0.5">ELKAR · tu mentor</div>
                       <p className="text-sm italic text-foreground/90 leading-relaxed">"{result.elkar}"</p>
                     </div>
+                  </div>
+
+                  {/* Guardar planta (simulado) */}
+                  <div className="pt-2">
+                    <button
+                      type="button"
+                      onClick={handleSave}
+                      disabled={saving || saved}
+                      aria-live="polite"
+                      className={`w-full inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full border text-sm font-medium transition-smooth ${
+                        saved
+                          ? "bg-gold/15 border-gold/50 text-gold cursor-default"
+                          : "bg-gold text-background border-gold hover:bg-gold/90 disabled:opacity-70"
+                      }`}
+                    >
+                      {saved ? (
+                        <>
+                          <BookmarkCheck className="h-4 w-4" />
+                          Planta guardada en tu jardín
+                        </>
+                      ) : saving ? (
+                        <>
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                          Guardando…
+                        </>
+                      ) : (
+                        <>
+                          <Bookmark className="h-4 w-4" />
+                          Guardar esta planta
+                        </>
+                      )}
+                    </button>
+                    <p className="text-center text-[11px] text-muted-foreground mt-2">
+                      {saved
+                        ? "Pronto podrás ver el historial completo de tus plantas y su evolución."
+                        : "Tu jardín personal estará disponible en próximas versiones."}
+                    </p>
                   </div>
                 </div>
               )}
