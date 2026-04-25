@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { diagnosePlant } from "@/utils/diagnose.functions";
-import { Upload, Loader2, AlertTriangle, CheckCircle2, Clock, Sparkles, RotateCcw, Sun, Focus, Crop, Leaf, Camera } from "lucide-react";
+import { Upload, Loader2, AlertTriangle, CheckCircle2, Clock, Sparkles, RotateCcw, Sun, Focus, Crop, Leaf, Camera, Droplets, FlaskConical, Eye, Stethoscope, Bell, BellRing, Repeat } from "lucide-react";
 import { Bookmark, BookmarkCheck } from "lucide-react";
 import { PhotoGuide } from "./PhotoGuide";
 
@@ -12,6 +12,27 @@ const severityColor: Record<string, string> = {
   moderado: "text-amber-200 border-amber-400/40 bg-amber-500/10",
   grave: "text-red-300 border-red-400/40 bg-red-500/10",
 };
+
+const reminderMeta: Record<string, { icon: typeof Droplets; label: string; tone: string }> = {
+  riego: { icon: Droplets, label: "Riego", tone: "text-sky-300 border-sky-400/30 bg-sky-500/10" },
+  fertilizacion: { icon: FlaskConical, label: "Fertilización", tone: "text-emerald-300 border-emerald-400/30 bg-emerald-500/10" },
+  revision: { icon: Eye, label: "Revisión", tone: "text-amber-200 border-amber-400/30 bg-amber-500/10" },
+  tratamiento: { icon: Stethoscope, label: "Tratamiento", tone: "text-rose-300 border-rose-400/30 bg-rose-500/10" },
+};
+
+function formatWhen(inDays: number): string {
+  if (inDays <= 0) return "Hoy";
+  if (inDays === 1) return "Mañana";
+  if (inDays < 7) return `En ${inDays} días`;
+  if (inDays < 14) return `En 1 semana`;
+  return `En ${Math.round(inDays / 7)} semanas`;
+}
+
+function formatDate(inDays: number): string {
+  const d = new Date();
+  d.setDate(d.getDate() + Math.max(0, inDays));
+  return d.toLocaleDateString("es-ES", { weekday: "short", day: "numeric", month: "short" });
+}
 
 const checklistItems = [
   {
