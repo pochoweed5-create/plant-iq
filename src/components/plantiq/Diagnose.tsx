@@ -450,6 +450,31 @@ export function Diagnose() {
                     </div>
                   </div>
 
+                  {/* Acción nutricional de hoy */}
+                  {(() => {
+                    const action = getTodayAction(result);
+                    const Icon = action.icon;
+                    return (
+                      <div className={`rounded-2xl border p-4 sm:p-5 ${action.tone}`}>
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="text-[10px] uppercase tracking-[0.2em] opacity-80">Hoy · acción nutricional</span>
+                          <span className="text-[10px] uppercase tracking-wider px-1.5 py-0.5 rounded-full border border-current/40 bg-background/20">
+                            {action.badge}
+                          </span>
+                        </div>
+                        <div className="flex gap-3">
+                          <span className="flex-shrink-0 h-11 w-11 rounded-full border border-current/40 bg-background/20 flex items-center justify-center">
+                            <Icon className="h-5 w-5" />
+                          </span>
+                          <div className="min-w-0">
+                            <p className="font-serif text-lg sm:text-xl leading-snug text-foreground">{action.title}</p>
+                            <p className="text-[12.5px] text-foreground/80 leading-relaxed mt-1">{action.detail}</p>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })()}
+
                   {/* 1. Problema */}
                   <Section index={1} label="Problema detectado">
                     <h3 className="font-serif text-2xl sm:text-3xl leading-tight text-foreground">
