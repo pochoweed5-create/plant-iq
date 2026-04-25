@@ -329,6 +329,7 @@ export function Diagnose() {
           Las recomendaciones son orientativas. Ante dudas, consulta a un profesional.
         </p>
       </div>
+      <PhotoGuide open={guideOpen} onClose={() => setGuideOpen(false)} />
     </section>
   );
 }
