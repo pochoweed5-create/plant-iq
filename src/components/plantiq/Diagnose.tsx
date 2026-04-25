@@ -145,29 +145,38 @@ export function Diagnose() {
               )}
 
               {result && !loading && result.ok === true && (
-                <div className="space-y-5 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                  {/* Header: planta + nivel de gravedad */}
                   <div>
                     <div className="flex items-center gap-2 flex-wrap">
                       <span className="text-xs uppercase tracking-wider text-muted-foreground">{result.plant}</span>
                       <span className={`text-[11px] uppercase tracking-wider px-2 py-0.5 rounded-full border ${severityColor[result.severity] ?? severityColor.moderado}`}>
-                        {result.severity}
-                      </span>
-                      <span className="text-[11px] uppercase tracking-wider px-2 py-0.5 rounded-full border border-border text-muted-foreground">
-                        urgencia {result.urgency}
+                        Gravedad {result.severity}
                       </span>
                     </div>
-                    <h3 className="font-serif text-3xl mt-2 leading-tight">{result.problem}</h3>
                   </div>
 
-                  <p className="text-sm text-foreground/85 leading-relaxed">{result.explanation}</p>
+                  {/* 1. Problema */}
+                  <Section index={1} label="Problema detectado">
+                    <h3 className="font-serif text-2xl sm:text-3xl leading-tight text-foreground">
+                      {result.problem}
+                    </h3>
+                  </Section>
 
-                  <div className="rounded-xl bg-leaf-card/60 border border-border/50 p-4">
-                    <div className="text-[11px] uppercase tracking-wider text-gold mb-1">Causa probable</div>
-                    <p className="text-sm text-foreground/85">{result.cause}</p>
-                  </div>
+                  {/* 2. Explicación */}
+                  <Section index={2} label="Explicación">
+                    <p className="text-sm text-foreground/85 leading-relaxed">{result.explanation}</p>
+                  </Section>
 
-                  <div>
-                    <div className="text-[11px] uppercase tracking-wider text-gold mb-3">Solución paso a paso</div>
+                  {/* 3. Causa probable */}
+                  <Section index={3} label="Causa probable">
+                    <div className="rounded-xl bg-leaf-card/60 border border-border/50 p-4">
+                      <p className="text-sm text-foreground/85 leading-relaxed">{result.cause}</p>
+                    </div>
+                  </Section>
+
+                  {/* 4. Solución paso a paso */}
+                  <Section index={4} label="Solución paso a paso">
                     <ol className="space-y-2.5">
                       {result.steps.map((s, i) => (
                         <li key={i} className="flex gap-3 text-sm">
@@ -178,19 +187,24 @@ export function Diagnose() {
                         </li>
                       ))}
                     </ol>
-                  </div>
+                  </Section>
 
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground pt-1">
-                    <Clock className="h-4 w-4 text-gold" />
-                    Recuperación estimada: <span className="text-foreground">{result.recovery}</span>
-                  </div>
+                  {/* 5. Recuperación */}
+                  <Section index={5} label="Tiempo de recuperación">
+                    <div className="flex items-center gap-2 text-sm">
+                      <Clock className="h-4 w-4 text-gold" />
+                      <span className="text-foreground/90">{result.recovery}</span>
+                      <span className="text-muted-foreground">· urgencia {result.urgency}</span>
+                    </div>
+                  </Section>
 
+                  {/* Mensaje de ELKAR */}
                   <div className="rounded-xl border border-gold/30 bg-gold/[0.06] p-4 flex gap-3">
                     <span className="flex-shrink-0 h-8 w-8 rounded-full bg-gold/20 flex items-center justify-center">
                       <CheckCircle2 className="h-4 w-4 text-gold" />
                     </span>
                     <div>
-                      <div className="text-[11px] uppercase tracking-wider text-gold mb-0.5">ELKAR dice</div>
+                      <div className="text-[11px] uppercase tracking-wider text-gold mb-0.5">ELKAR · tu mentor</div>
                       <p className="text-sm italic text-foreground/90 leading-relaxed">"{result.elkar}"</p>
                     </div>
                   </div>
@@ -205,5 +219,18 @@ export function Diagnose() {
         </p>
       </div>
     </section>
+  );
+}
+
+function Section({ index, label, children }: { index: number; label: string; children: React.ReactNode }) {
+  return (
+    <div>
+      <div className="flex items-center gap-2 mb-2">
+        <span className="text-[10px] font-medium text-gold/90 tabular-nums">0{index}</span>
+        <span className="text-[11px] uppercase tracking-[0.18em] text-gold">{label}</span>
+        <span className="flex-1 h-px bg-gradient-to-r from-gold/30 to-transparent" />
+      </div>
+      {children}
+    </div>
   );
 }
