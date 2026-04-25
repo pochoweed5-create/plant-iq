@@ -18,6 +18,21 @@ type DiagnosisResult = {
     inDays: number;
     repeatEveryDays?: number;
   }>;
+  nutritionPlan: {
+    stage: "plantula" | "crecimiento" | "prefloracion" | "floracion" | "engorde" | "lavado" | "desconocida";
+    stageNote: string;
+    targetEC?: string;
+    targetPH?: string;
+    medium?: "suelo" | "coco" | "hidro" | "desconocido";
+    products: Array<{
+      name: string;
+      role: "base-a" | "base-b" | "crecimiento" | "floracion" | "pk-booster" | "cal-mag" | "enraizante" | "enzimas" | "microbiologia" | "corrector-ph" | "otro";
+      dose: string;
+      frequency: string;
+      note?: string;
+    }>;
+    warnings: string[];
+  };
 } | { ok: false; error: string };
 
 export const diagnosePlant = createServerFn({ method: "POST" })
@@ -68,6 +83,24 @@ Reglas:
 - Si la causa es nutricional, incluye un recordatorio de "fertilizacion" con producto/ratio orientativo.
 - Convierte los pasos del tratamiento en recordatorios "tratamiento" cuando tengan tiempo asociado.`;
 
+    const nutritionGuide = `
+
+PLAN NUTRICIONAL POR ETAPA (campo "nutritionPlan"):
+Genera un plan nutricional orientativo adaptado a la etapa de la planta y al diagnóstico:
+- stage: deduce la etapa a partir de la imagen y el contexto del cultivador ("plantula", "crecimiento", "prefloracion", "floracion", "engorde", "lavado"). Si no es posible deducirla, usa "desconocida" y explícalo en stageNote.
+- stageNote: 1 frase explicando en qué etapa está y por qué.
+- targetEC y targetPH: rangos orientativos según etapa y medio (ej: "1.2–1.6 mS/cm", "5.8–6.2"). Omite si no aplica.
+- medium: deduce el medio si es posible (suelo, coco, hidro), o "desconocido".
+- products: 3 a 6 productos genéricos (NO marcas comerciales obligatorias; puedes citar tipos: "fertilizante base de crecimiento NPK alto en N", "PK 13/14", "Cal-Mag", "enzimas", "tricodermas", etc.). Cada producto con:
+  · name: nombre genérico claro.
+  · role: rol nutricional.
+  · dose: dosis orientativa por litro de agua (ej: "1.5 ml/L", "0.5 g/L").
+  · frequency: frecuencia (ej: "cada riego", "1 de cada 2 riegos", "1 vez por semana").
+  · note (opcional): aviso útil (ej: "no mezclar con cal-mag en el mismo tanque").
+- Ajusta el plan al diagnóstico: si hay exceso de nutrientes, prioriza un lavado de raíces y reduce dosis. Si hay carencia específica (N, P, K, Ca, Mg, Fe), incluye el correctivo adecuado.
+- warnings: 1 a 3 avisos clave (ej: "Ajusta pH SIEMPRE después de mezclar nutrientes", "Empieza por el 50% de la dosis si la planta viene estresada").
+- Las dosis son ORIENTATIVAS: deja claro en stageNote o warnings que el cultivador debe ajustar a su línea de nutrientes.`;
+
     const userText = data.note
       ? `Analiza esta planta y diagnostica el problema más probable siguiendo tu protocolo. Contexto del cultivador: ${data.note}`
       : "Analiza esta planta y diagnostica el problema más probable siguiendo tu protocolo. Sin contexto adicional del cultivador.";
@@ -82,7 +115,7 @@ Reglas:
         body: JSON.stringify({
           model: "google/gemini-2.5-flash",
           messages: [
-            { role: "system", content: systemPrompt + remindersGuide },
+            { role: "system", content: systemPrompt + remindersGuide + nutritionGuide },
             {
               role: "user",
               content: [
@@ -129,8 +162,60 @@ Reglas:
                         additionalProperties: false,
                       },
                     },
+                    nutritionPlan: {
+                      type: "object",
+                      description: "Plan nutricional orientativo por etapa.",
+                      properties: {
+                        stage: {
+                          type: "string",
+                          enum: ["plantula", "crecimiento", "prefloracion", "floracion", "engorde", "lavado", "desconocida"],
+                        },
+                        stageNote: { type: "string", description: "Explicación breve de la etapa detectada" },
+                        targetEC: { type: "string", description: "Rango orientativo de EC, ej: '1.2-1.6 mS/cm'" },
+                        targetPH: { type: "string", description: "Rango orientativo de pH, ej: '5.8-6.2'" },
+                        medium: { type: "string", enum: ["suelo", "coco", "hidro", "desconocido"] },
+                        products: {
+                          type: "array",
+                          description: "3-6 productos orientativos con dosis y frecuencia.",
+                          items: {
+                            type: "object",
+                            properties: {
+                              name: { type: "string" },
+                              role: {
+                                type: "string",
+                                enum: [
+                                  "base-a",
+                                  "base-b",
+                                  "crecimiento",
+                                  "floracion",
+                                  "pk-booster",
+                                  "cal-mag",
+                                  "enraizante",
+                                  "enzimas",
+                                  "microbiologia",
+                                  "corrector-ph",
+                                  "otro",
+                                ],
+                              },
+                              dose: { type: "string", description: "Dosis orientativa, ej: '1.5 ml/L'" },
+                              frequency: { type: "string", description: "Frecuencia, ej: 'cada riego'" },
+                              note: { type: "string" },
+                            },
+                            required: ["name", "role", "dose", "frequency"],
+                            additionalProperties: false,
+                          },
+                        },
+                        warnings: {
+                          type: "array",
+                          items: { type: "string" },
+                          description: "1-3 avisos clave sobre aplicación del plan.",
+                        },
+                      },
+                      required: ["stage", "stageNote", "products", "warnings"],
+                      additionalProperties: false,
+                    },
                   },
-                  required: ["plant", "problem", "severity", "urgency", "cause", "explanation", "steps", "recovery", "elkar", "reminders"],
+                  required: ["plant", "problem", "severity", "urgency", "cause", "explanation", "steps", "recovery", "elkar", "reminders", "nutritionPlan"],
                   additionalProperties: false,
                 },
               },
