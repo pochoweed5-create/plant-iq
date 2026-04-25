@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { diagnosePlant } from "@/utils/diagnose.functions";
-import { Upload, Loader2, AlertTriangle, CheckCircle2, Clock, Sparkles, RotateCcw, Sun, Focus, Crop, Leaf, Camera, Droplets, FlaskConical, Eye, Stethoscope, Bell, BellRing, Repeat } from "lucide-react";
+import { Upload, Loader2, AlertTriangle, CheckCircle2, Clock, Sparkles, RotateCcw, Sun, Focus, Crop, Leaf, Camera, Droplets, FlaskConical, Eye, Stethoscope, Bell, BellRing, Repeat, Sprout, FlaskRound, Beaker, Gauge, AlertCircle } from "lucide-react";
 import { Bookmark, BookmarkCheck } from "lucide-react";
 import { PhotoGuide } from "./PhotoGuide";
 
@@ -18,6 +18,30 @@ const reminderMeta: Record<string, { icon: typeof Droplets; label: string; tone:
   fertilizacion: { icon: FlaskConical, label: "Fertilización", tone: "text-emerald-300 border-emerald-400/30 bg-emerald-500/10" },
   revision: { icon: Eye, label: "Revisión", tone: "text-amber-200 border-amber-400/30 bg-amber-500/10" },
   tratamiento: { icon: Stethoscope, label: "Tratamiento", tone: "text-rose-300 border-rose-400/30 bg-rose-500/10" },
+};
+
+const stageMeta: Record<string, { label: string; tone: string }> = {
+  plantula: { label: "Plántula", tone: "text-emerald-200 border-emerald-400/30 bg-emerald-500/10" },
+  crecimiento: { label: "Crecimiento", tone: "text-emerald-300 border-emerald-400/30 bg-emerald-500/10" },
+  prefloracion: { label: "Prefloración", tone: "text-amber-200 border-amber-400/30 bg-amber-500/10" },
+  floracion: { label: "Floración", tone: "text-fuchsia-300 border-fuchsia-400/30 bg-fuchsia-500/10" },
+  engorde: { label: "Engorde", tone: "text-rose-200 border-rose-400/30 bg-rose-500/10" },
+  lavado: { label: "Lavado de raíces", tone: "text-sky-300 border-sky-400/30 bg-sky-500/10" },
+  desconocida: { label: "Etapa por confirmar", tone: "text-muted-foreground border-border/60 bg-card/40" },
+};
+
+const roleLabel: Record<string, string> = {
+  "base-a": "Base A",
+  "base-b": "Base B",
+  crecimiento: "Crecimiento",
+  floracion: "Floración",
+  "pk-booster": "PK Booster",
+  "cal-mag": "Cal-Mag",
+  enraizante: "Enraizante",
+  enzimas: "Enzimas",
+  microbiologia: "Microbiología",
+  "corrector-ph": "Corrector pH",
+  otro: "Otro",
 };
 
 function formatWhen(inDays: number): string {
