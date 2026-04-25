@@ -86,6 +86,7 @@ export function Diagnose() {
     setPreview(null);
     setResult(null);
     setNote("");
+    setChecked({});
     if (inputRef.current) inputRef.current.value = "";
   }
 
