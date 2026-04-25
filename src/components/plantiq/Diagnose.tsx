@@ -107,16 +107,80 @@ export function Diagnose() {
             {/* Uploader */}
             <div className="p-8 sm:p-10 border-b md:border-b-0 md:border-r border-border/50">
               {!preview ? (
-                <label
-                  htmlFor="plantfile"
-                  className="flex flex-col items-center justify-center text-center min-h-[280px] rounded-2xl border-2 border-dashed border-border hover:border-gold/60 bg-leaf-card/40 transition-smooth cursor-pointer p-8"
-                >
-                  <span className="h-14 w-14 rounded-full bg-gold/10 border border-gold/30 flex items-center justify-center mb-4">
-                    <Upload className="h-6 w-6 text-gold" />
-                  </span>
-                  <span className="font-serif text-xl">Arrastra o sube una foto</span>
-                  <span className="text-sm text-muted-foreground mt-2">JPG, PNG · máx. 8 MB</span>
-                </label>
+                <div className="space-y-4">
+                  {/* Checklist previo */}
+                  <div className="rounded-2xl border border-border/60 bg-leaf-card/40 p-4 sm:p-5">
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="text-[11px] uppercase tracking-[0.18em] text-gold">
+                        Antes de subir · checklist
+                      </span>
+                      <span className="text-[11px] text-muted-foreground tabular-nums">
+                        {checklistItems.filter((i) => checked[i.key]).length}/{checklistItems.length}
+                      </span>
+                    </div>
+                    <ul className="grid sm:grid-cols-2 gap-2">
+                      {checklistItems.map(({ key, icon: Icon, title, hint }) => {
+                        const isOn = !!checked[key];
+                        return (
+                          <li key={key}>
+                            <button
+                              type="button"
+                              onClick={() => toggle(key)}
+                              aria-pressed={isOn}
+                              className={`w-full text-left flex gap-3 p-3 rounded-xl border transition-smooth ${
+                                isOn
+                                  ? "border-gold/50 bg-gold/[0.07]"
+                                  : "border-border/60 bg-background/30 hover:border-gold/30"
+                              }`}
+                            >
+                              <span
+                                className={`flex-shrink-0 h-8 w-8 rounded-full border flex items-center justify-center transition-smooth ${
+                                  isOn ? "border-gold/50 bg-gold/15 text-gold" : "border-border text-muted-foreground"
+                                }`}
+                              >
+                                {isOn ? <CheckCircle2 className="h-4 w-4" /> : <Icon className="h-4 w-4" />}
+                              </span>
+                              <span className="min-w-0">
+                                <span className="block text-sm font-medium text-foreground">{title}</span>
+                                <span className="block text-[11px] text-muted-foreground leading-snug mt-0.5">
+                                  {hint}
+                                </span>
+                              </span>
+                            </button>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </div>
+
+                  {/* Uploader */}
+                  <label
+                    htmlFor="plantfile"
+                    aria-disabled={!allChecked}
+                    onClick={(e) => {
+                      if (!allChecked) e.preventDefault();
+                    }}
+                    className={`flex flex-col items-center justify-center text-center min-h-[200px] rounded-2xl border-2 border-dashed transition-smooth p-8 ${
+                      allChecked
+                        ? "border-gold/50 hover:border-gold bg-leaf-card/40 cursor-pointer"
+                        : "border-border/60 bg-background/20 cursor-not-allowed opacity-60"
+                    }`}
+                  >
+                    <span
+                      className={`h-14 w-14 rounded-full border flex items-center justify-center mb-4 ${
+                        allChecked ? "bg-gold/15 border-gold/40 text-gold" : "bg-muted/30 border-border text-muted-foreground"
+                      }`}
+                    >
+                      <Upload className="h-6 w-6" />
+                    </span>
+                    <span className="font-serif text-xl">
+                      {allChecked ? "Arrastra o sube tu foto" : "Confirma el checklist primero"}
+                    </span>
+                    <span className="text-sm text-muted-foreground mt-2">
+                      {allChecked ? "JPG, PNG · máx. 8 MB" : "Marca los 4 puntos para activar la subida"}
+                    </span>
+                  </label>
+                </div>
               ) : (
                 <div className="relative rounded-2xl overflow-hidden border border-border/60 min-h-[280px]">
                   <img src={preview} alt="Tu planta" className="w-full h-full object-cover max-h-[420px]" />
