@@ -6,6 +6,7 @@ import { Bookmark, BookmarkCheck } from "lucide-react";
 import { PhotoGuide } from "./PhotoGuide";
 
 type Result = Awaited<ReturnType<typeof diagnosePlant>>;
+type OkResult = Extract<Result, { ok: true }>;
 
 const severityColor: Record<string, string> = {
   leve: "text-emerald-300 border-emerald-400/40 bg-emerald-500/10",
@@ -56,6 +57,128 @@ function formatDate(inDays: number): string {
   const d = new Date();
   d.setDate(d.getDate() + Math.max(0, inDays));
   return d.toLocaleDateString("es-ES", { weekday: "short", day: "numeric", month: "short" });
+}
+
+type TodayAction = {
+  kind: "fertilizar" | "pk" | "ph-ec" | "lavar" | "riego" | "revision" | "tratamiento" | "observar";
+  title: string;
+  detail: string;
+  icon: typeof Droplets;
+  tone: string;
+  badge: string;
+};
+
+function getTodayAction(r: OkResult): TodayAction {
+  const np = r.nutritionPlan;
+  const stage = np?.stage ?? "desconocida";
+
+  // 1. Lavado de raíces si la etapa lo indica explícitamente
+  if (stage === "lavado") {
+    return {
+      kind: "lavar",
+      title: "Lava las raíces hoy",
+      detail: "Riega solo con agua a pH correcto hasta drenar 20-30% del volumen. Sin nutrientes.",
+      icon: Droplets,
+      tone: "text-sky-300 border-sky-400/40 bg-sky-500/10",
+      badge: "Lavado",
+    };
+  }
+
+  // 2. Recordatorios programados para HOY (inDays <= 0)
+  const dueToday = r.reminders?.filter((x) => x.inDays <= 0) ?? [];
+  const dueFert = dueToday.find((x) => x.type === "fertilizacion");
+  const dueTrat = dueToday.find((x) => x.type === "tratamiento");
+  const dueRiego = dueToday.find((x) => x.type === "riego");
+  const dueRev = dueToday.find((x) => x.type === "revision");
+
+  // 3. PK booster si está en floración/engorde y el plan lo incluye
+  const hasPK = np?.products?.some((p) => p.role === "pk-booster");
+  if (hasPK && (stage === "floracion" || stage === "engorde") && (dueFert || !dueTrat)) {
+    const pk = np!.products.find((p) => p.role === "pk-booster")!;
+    return {
+      kind: "pk",
+      title: "Añade PK booster hoy",
+      detail: `${pk.name} · ${pk.dose} · ${pk.frequency}. Ajusta pH tras mezclar.`,
+      icon: FlaskConical,
+      tone: "text-fuchsia-300 border-fuchsia-400/40 bg-fuchsia-500/10",
+      badge: "PK",
+    };
+  }
+
+  // 4. Tratamiento prioritario si está vencido hoy
+  if (dueTrat) {
+    return {
+      kind: "tratamiento",
+      title: dueTrat.title,
+      detail: dueTrat.detail,
+      icon: Stethoscope,
+      tone: "text-rose-300 border-rose-400/40 bg-rose-500/10",
+      badge: "Tratamiento",
+    };
+  }
+
+  // 5. Fertilización programada hoy
+  if (dueFert) {
+    return {
+      kind: "fertilizar",
+      title: dueFert.title,
+      detail: dueFert.detail,
+      icon: FlaskConical,
+      tone: "text-emerald-300 border-emerald-400/40 bg-emerald-500/10",
+      badge: "Fertilizar",
+    };
+  }
+
+  // 6. Si la causa apunta a pH/EC o corrector pH presente
+  const causeText = `${r.cause} ${r.problem}`.toLowerCase();
+  const hasPhFix = np?.products?.some((p) => p.role === "corrector-ph");
+  if (causeText.includes("ph") || causeText.includes("ec") || causeText.includes("salinidad") || hasPhFix) {
+    return {
+      kind: "ph-ec",
+      title: "Revisa pH y EC del riego",
+      detail: `Mide antes de regar. Objetivo${np?.targetPH ? ` pH ${np.targetPH}` : ""}${np?.targetEC ? ` · EC ${np.targetEC}` : ""}. Ajusta antes de aplicar nutrientes.`,
+      icon: Beaker,
+      tone: "text-amber-200 border-amber-400/40 bg-amber-500/10",
+      badge: "pH / EC",
+    };
+  }
+
+  // 7. Riego programado hoy
+  if (dueRiego) {
+    return {
+      kind: "riego",
+      title: dueRiego.title,
+      detail: dueRiego.detail,
+      icon: Droplets,
+      tone: "text-sky-300 border-sky-400/40 bg-sky-500/10",
+      badge: "Riego",
+    };
+  }
+
+  // 8. Revisión hoy
+  if (dueRev) {
+    return {
+      kind: "revision",
+      title: dueRev.title,
+      detail: dueRev.detail,
+      icon: Eye,
+      tone: "text-amber-200 border-amber-400/40 bg-amber-500/10",
+      badge: "Revisión",
+    };
+  }
+
+  // 9. Sin acción crítica: observar
+  const next = [...(r.reminders ?? [])].sort((a, b) => a.inDays - b.inDays)[0];
+  return {
+    kind: "observar",
+    title: "Hoy: solo observa",
+    detail: next
+      ? `Sin acción nutricional crítica. Próxima tarea: ${next.title.toLowerCase()} ${formatWhen(next.inDays).toLowerCase()}.`
+      : "Sin acción nutricional crítica. Mantén el régimen actual y vigila la planta.",
+    icon: Eye,
+    tone: "text-emerald-200 border-emerald-400/30 bg-emerald-500/10",
+    badge: "Observar",
+  };
 }
 
 const checklistItems = [
@@ -326,6 +449,31 @@ export function Diagnose() {
                       </span>
                     </div>
                   </div>
+
+                  {/* Acción nutricional de hoy */}
+                  {(() => {
+                    const action = getTodayAction(result);
+                    const Icon = action.icon;
+                    return (
+                      <div className={`rounded-2xl border p-4 sm:p-5 ${action.tone}`}>
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="text-[10px] uppercase tracking-[0.2em] opacity-80">Hoy · acción nutricional</span>
+                          <span className="text-[10px] uppercase tracking-wider px-1.5 py-0.5 rounded-full border border-current/40 bg-background/20">
+                            {action.badge}
+                          </span>
+                        </div>
+                        <div className="flex gap-3">
+                          <span className="flex-shrink-0 h-11 w-11 rounded-full border border-current/40 bg-background/20 flex items-center justify-center">
+                            <Icon className="h-5 w-5" />
+                          </span>
+                          <div className="min-w-0">
+                            <p className="font-serif text-lg sm:text-xl leading-snug text-foreground">{action.title}</p>
+                            <p className="text-[12.5px] text-foreground/80 leading-relaxed mt-1">{action.detail}</p>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })()}
 
                   {/* 1. Problema */}
                   <Section index={1} label="Problema detectado">
