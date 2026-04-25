@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { diagnosePlant } from "@/utils/diagnose.functions";
-import { Upload, Loader2, AlertTriangle, CheckCircle2, Clock, Sparkles, RotateCcw, Sun, Focus, Crop, Leaf, Camera } from "lucide-react";
+import { Upload, Loader2, AlertTriangle, CheckCircle2, Clock, Sparkles, RotateCcw, Sun, Focus, Crop, Leaf, Camera, Droplets, FlaskConical, Eye, Stethoscope, Bell, BellRing, Repeat } from "lucide-react";
 import { Bookmark, BookmarkCheck } from "lucide-react";
 import { PhotoGuide } from "./PhotoGuide";
 
@@ -12,6 +12,27 @@ const severityColor: Record<string, string> = {
   moderado: "text-amber-200 border-amber-400/40 bg-amber-500/10",
   grave: "text-red-300 border-red-400/40 bg-red-500/10",
 };
+
+const reminderMeta: Record<string, { icon: typeof Droplets; label: string; tone: string }> = {
+  riego: { icon: Droplets, label: "Riego", tone: "text-sky-300 border-sky-400/30 bg-sky-500/10" },
+  fertilizacion: { icon: FlaskConical, label: "Fertilización", tone: "text-emerald-300 border-emerald-400/30 bg-emerald-500/10" },
+  revision: { icon: Eye, label: "Revisión", tone: "text-amber-200 border-amber-400/30 bg-amber-500/10" },
+  tratamiento: { icon: Stethoscope, label: "Tratamiento", tone: "text-rose-300 border-rose-400/30 bg-rose-500/10" },
+};
+
+function formatWhen(inDays: number): string {
+  if (inDays <= 0) return "Hoy";
+  if (inDays === 1) return "Mañana";
+  if (inDays < 7) return `En ${inDays} días`;
+  if (inDays < 14) return `En 1 semana`;
+  return `En ${Math.round(inDays / 7)} semanas`;
+}
+
+function formatDate(inDays: number): string {
+  const d = new Date();
+  d.setDate(d.getDate() + Math.max(0, inDays));
+  return d.toLocaleDateString("es-ES", { weekday: "short", day: "numeric", month: "short" });
+}
 
 const checklistItems = [
   {
@@ -335,6 +356,60 @@ export function Diagnose() {
                     </div>
                   </div>
 
+                  {/* Recordatorios automáticos */}
+                  {result.reminders && result.reminders.length > 0 && (
+                    <Section index={6} label="Plan de cuidados · recordatorios">
+                      <div className="flex items-center gap-2 mb-3 text-[11px] text-muted-foreground">
+                        {saved ? <BellRing className="h-3.5 w-3.5 text-gold" /> : <Bell className="h-3.5 w-3.5" />}
+                        <span>
+                          {saved
+                            ? "Recordatorios activos · ELKAR te avisará en cada fecha"
+                            : "ELKAR ha generado un plan. Guarda la planta para activarlos."}
+                        </span>
+                      </div>
+                      <ul className="space-y-2.5">
+                        {result.reminders.map((r, i) => {
+                          const meta = reminderMeta[r.type] ?? reminderMeta.revision;
+                          const Icon = meta.icon;
+                          return (
+                            <li
+                              key={i}
+                              className={`rounded-xl border bg-card/40 p-3 sm:p-4 flex gap-3 transition-smooth ${
+                                saved ? "border-gold/30" : "border-border/60"
+                              }`}
+                            >
+                              <span className={`flex-shrink-0 h-9 w-9 rounded-full border flex items-center justify-center ${meta.tone}`}>
+                                <Icon className="h-4 w-4" />
+                              </span>
+                              <div className="min-w-0 flex-1">
+                                <div className="flex items-center gap-2 flex-wrap">
+                                  <span className="text-[10px] uppercase tracking-wider text-muted-foreground">
+                                    {meta.label}
+                                  </span>
+                                  <span className="text-[10px] text-muted-foreground">·</span>
+                                  <span className="text-[11px] font-medium text-gold">
+                                    {formatWhen(r.inDays)}
+                                  </span>
+                                  <span className="text-[10px] text-muted-foreground">
+                                    {formatDate(r.inDays)}
+                                  </span>
+                                  {r.repeatEveryDays ? (
+                                    <span className="inline-flex items-center gap-1 text-[10px] text-muted-foreground border border-border/60 rounded-full px-1.5 py-0.5">
+                                      <Repeat className="h-2.5 w-2.5" />
+                                      cada {r.repeatEveryDays} d
+                                    </span>
+                                  ) : null}
+                                </div>
+                                <p className="text-sm font-medium text-foreground mt-1 leading-snug">{r.title}</p>
+                                <p className="text-[12.5px] text-muted-foreground leading-relaxed mt-0.5">{r.detail}</p>
+                              </div>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    </Section>
+                  )}
+
                   {/* Guardar planta (simulado) */}
                   <div className="pt-2">
                     <button
@@ -351,7 +426,7 @@ export function Diagnose() {
                       {saved ? (
                         <>
                           <BookmarkCheck className="h-4 w-4" />
-                          Planta guardada en tu jardín
+                          Planta guardada · recordatorios activos
                         </>
                       ) : saving ? (
                         <>
@@ -361,14 +436,14 @@ export function Diagnose() {
                       ) : (
                         <>
                           <Bookmark className="h-4 w-4" />
-                          Guardar esta planta
+                          Guardar planta y activar recordatorios
                         </>
                       )}
                     </button>
                     <p className="text-center text-[11px] text-muted-foreground mt-2">
                       {saved
-                        ? "Pronto podrás ver el historial completo de tus plantas y su evolución."
-                        : "Tu jardín personal estará disponible en próximas versiones."}
+                        ? "Próximamente recibirás los avisos por email/push en cada fecha programada."
+                        : "Tu jardín personal y los avisos automáticos llegarán en próximas versiones."}
                     </p>
                   </div>
                 </div>
