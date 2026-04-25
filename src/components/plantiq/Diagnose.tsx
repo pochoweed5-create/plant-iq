@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { diagnosePlant } from "@/utils/diagnose.functions";
-import { Upload, Loader2, AlertTriangle, CheckCircle2, Clock, Sparkles, RotateCcw } from "lucide-react";
+import { Upload, Loader2, AlertTriangle, CheckCircle2, Clock, Sparkles, RotateCcw, Sun, Focus, Crop, Leaf } from "lucide-react";
 
 type Result = Awaited<ReturnType<typeof diagnosePlant>>;
 
@@ -10,6 +10,33 @@ const severityColor: Record<string, string> = {
   moderado: "text-amber-200 border-amber-400/40 bg-amber-500/10",
   grave: "text-red-300 border-red-400/40 bg-red-500/10",
 };
+
+const checklistItems = [
+  {
+    key: "light",
+    icon: Sun,
+    title: "Buena luz natural",
+    hint: "Evita flash directo y sombras duras. Luz de día indirecta es ideal.",
+  },
+  {
+    key: "angle",
+    icon: Crop,
+    title: "Ángulo frontal",
+    hint: "Sitúate de frente a la hoja o zona afectada, no en diagonal.",
+  },
+  {
+    key: "focus",
+    icon: Focus,
+    title: "Enfoque nítido",
+    hint: "Acércate hasta ver textura, manchas y bordes con detalle.",
+  },
+  {
+    key: "leaves",
+    icon: Leaf,
+    title: "Hojas completas",
+    hint: "Encuadra hojas enteras: el síntoma y los bordes deben verse.",
+  },
+] as const;
 
 function fileToDataUrl(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -26,7 +53,14 @@ export function Diagnose() {
   const [note, setNote] = useState("");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<Result | null>(null);
+  const [checked, setChecked] = useState<Record<string, boolean>>({});
   const diagnose = useServerFn(diagnosePlant);
+
+  const allChecked = checklistItems.every((i) => checked[i.key]);
+
+  function toggle(key: string) {
+    setChecked((c) => ({ ...c, [key]: !c[key] }));
+  }
 
   async function onFile(file: File) {
     if (!file.type.startsWith("image/")) return;
