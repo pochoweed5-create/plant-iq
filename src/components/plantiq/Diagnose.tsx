@@ -268,6 +268,7 @@ function fileToDataUrl(file: File): Promise<string> {
 
 export function Diagnose() {
   const inputRef = useRef<HTMLInputElement>(null);
+  const galleryRef = useRef<HTMLInputElement>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [note, setNote] = useState("");
   const [loading, setLoading] = useState(false);
@@ -276,6 +277,7 @@ export function Diagnose() {
   const [guideOpen, setGuideOpen] = useState(false);
   const [saved, setSaved] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [cameraOpen, setCameraOpen] = useState(false);
   const diagnose = useServerFn(diagnosePlant);
 
   const allChecked = checklistItems.every((i) => checked[i.key]);
