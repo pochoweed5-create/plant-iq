@@ -469,18 +469,29 @@ export function Diagnose() {
 
               {result && !loading && result.ok === true && (
                 <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                  {/* Header: planta + nivel de gravedad */}
-                  <div>
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <span className="text-xs uppercase tracking-wider text-muted-foreground">{result.plant}</span>
-                      <span className={`text-[11px] uppercase tracking-wider px-2 py-0.5 rounded-full border ${severityColor[result.severity] ?? severityColor.moderado}`}>
-                        Gravedad {result.severity}
-                      </span>
-                    </div>
-                  </div>
+                  {/* Header: planta + estado principal */}
+                  {(() => {
+                    const status = statusMeta[result.status] ?? statusMeta.problema;
+                    return (
+                      <div>
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="text-xs uppercase tracking-wider text-muted-foreground">{result.plant}</span>
+                          <span className={`inline-flex items-center gap-1.5 text-[11px] uppercase tracking-wider px-2.5 py-1 rounded-full border ${status.tone}`}>
+                            <span aria-hidden>{status.emoji}</span>
+                            Estado · {status.label}
+                          </span>
+                          {result.status === "problema" && (
+                            <span className={`text-[11px] uppercase tracking-wider px-2 py-0.5 rounded-full border ${severityColor[result.severity] ?? severityColor.moderado}`}>
+                              Gravedad {result.severity}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })()}
 
                   {/* Acción nutricional de hoy */}
-                  {(() => {
+                  {result.status !== "sana" && (() => {
                     const action = getTodayAction(result);
                     const Icon = action.icon;
                     return (
@@ -504,11 +515,16 @@ export function Diagnose() {
                     );
                   })()}
 
-                  {/* 1. Problema */}
-                  <Section index={1} label="Problema detectado">
+                  {/* 1. Estado / Problema */}
+                  <Section index={1} label={statusMeta[result.status]?.sectionLabel ?? "Diagnóstico"}>
                     <h3 className="font-serif text-2xl sm:text-3xl leading-tight text-foreground">
                       {result.problem}
                     </h3>
+                    {result.status === "problema" && result.issueType && result.issueType !== "ninguno" && (
+                      <p className="mt-2 text-[11px] uppercase tracking-wider text-muted-foreground">
+                        Tipo · <span className="text-gold normal-case tracking-normal">{issueTypeLabel[result.issueType] ?? result.issueType}</span>
+                      </p>
+                    )}
                   </Section>
 
                   {/* 2. Explicación */}
@@ -516,15 +532,15 @@ export function Diagnose() {
                     <p className="text-sm text-foreground/85 leading-relaxed">{result.explanation}</p>
                   </Section>
 
-                  {/* 3. Causa probable */}
-                  <Section index={3} label="Causa probable">
+                  {/* 3. Causa probable / Por qué se ve así */}
+                  <Section index={3} label={result.status === "sana" ? "Por qué se ve sana" : "Causa probable"}>
                     <div className="rounded-xl bg-leaf-card/60 border border-border/50 p-4">
                       <p className="text-sm text-foreground/85 leading-relaxed">{result.cause}</p>
                     </div>
                   </Section>
 
-                  {/* 4. Solución paso a paso */}
-                  <Section index={4} label="Solución paso a paso">
+                  {/* 4. Acciones recomendadas */}
+                  <Section index={4} label={result.status === "sana" ? "Mantenimiento recomendado" : "Acción recomendada · paso a paso"}>
                     <ol className="space-y-2.5">
                       {result.steps.map((s, i) => (
                         <li key={i} className="flex gap-3 text-sm">
@@ -537,12 +553,14 @@ export function Diagnose() {
                     </ol>
                   </Section>
 
-                  {/* 5. Recuperación */}
-                  <Section index={5} label="Tiempo de recuperación">
+                  {/* 5. Recuperación / Próxima revisión */}
+                  <Section index={5} label={result.status === "sana" ? "Próxima revisión" : "Tiempo de recuperación"}>
                     <div className="flex items-center gap-2 text-sm">
                       <Clock className="h-4 w-4 text-gold" />
                       <span className="text-foreground/90">{result.recovery}</span>
-                      <span className="text-muted-foreground">· urgencia {result.urgency}</span>
+                      {result.status !== "sana" && (
+                        <span className="text-muted-foreground">· urgencia {result.urgency}</span>
+                      )}
                     </div>
                   </Section>
 
