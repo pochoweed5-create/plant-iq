@@ -3,9 +3,11 @@ import { createServerFn } from "@tanstack/react-start";
 type DiagnosisResult = {
   ok: true;
   plant: string;
+  status: "sana" | "leve" | "problema";
   problem: string;
   severity: "leve" | "moderado" | "grave";
   urgency: "baja" | "media" | "alta";
+  issueType?: "exceso" | "carencia" | "estres" | "plaga" | "ninguno";
   cause: string;
   explanation: string;
   steps: string[];
@@ -54,18 +56,39 @@ TONO:
 
 REGLAS DE DIAGNÓSTICO:
 - Observa color de hojas, manchas, bordes quemados, forma, turgencia, sustrato visible y entorno.
-- Identifica el problema MÁS PROBABLE. Si hay varios candidatos, elige el principal y menciona alternativas dentro de "explanation".
-- Si la imagen es de baja calidad, no es una planta, o no permite diagnóstico fiable: indícalo claramente en "problem" (ej: "Imagen insuficiente para diagnóstico") con severity "leve" y explica qué foto necesitas.
+- NO inventes problemas. Si la planta se ve sana, dilo claramente. No fuerces un diagnóstico negativo.
+- Si la imagen es de baja calidad, no es una planta, o no permite diagnóstico fiable: usa status "leve", problem "Imagen insuficiente para diagnóstico" y explica qué foto necesitas.
 - Nunca inventes datos. Si no estás seguro, dilo en "explanation".
 
-FORMATO OBLIGATORIO — devuelve EXCLUSIVAMENTE vía la función "report_diagnosis":
-1. problem: nombre claro y corto del problema detectado.
-2. severity: bajo (leve), medio (moderado) o alto (grave).
-3. explanation: explicación sencilla en 2-3 frases, sin jerga.
-4. cause: causa probable concreta (riego, nutrientes, plaga, luz, pH, etc.).
-5. steps: 4-6 pasos accionables, en orden, empezando por verbo ("Reduce el riego a…", "Revisa el pH del agua…"). Cada paso es una acción concreta, no un consejo vago.
-6. recovery: tiempo estimado realista (ej: "5-10 días si actúas hoy").
-7. elkar: 1-2 frases de mentor que motiven y resuman la prioridad.`;
+CLASIFICACIÓN OBLIGATORIA (campo "status"):
+Clasifica el estado general de la planta en UNO de estos 3 niveles:
+- "sana": la planta se ve bien, color y forma adecuados, sin síntomas claros. NO hay problema. En este caso:
+  · problem = "Sin problemas detectados"
+  · issueType = "ninguno"
+  · severity = "leve", urgency = "baja"
+  · cause describe por qué se ve sana (ej: "Color uniforme, turgencia correcta, sin manchas").
+  · steps = mantenimiento (riego estable, observación, condiciones actuales).
+  · elkar tono positivo, refuerza el buen manejo.
+- "leve": ligera desviación o detalle a vigilar (ligero estrés, riego mejorable, hoja vieja amarilleando, etc.). NO es un problema serio. En este caso:
+  · problem = nombre corto del detalle (ej: "Ligero estrés hídrico", "Hoja inferior amarilleando").
+  · issueType opcional según corresponda.
+  · severity = "leve".
+  · Tono tranquilo, sin alarmismo. Recomienda ajuste suave.
+- "problema": síntomas claros (carencias, excesos, plagas, hongos, bloqueos, quemaduras). En este caso:
+  · problem = nombre corto y técnico del problema.
+  · issueType OBLIGATORIO entre "exceso" | "carencia" | "estres" | "plaga".
+  · severity y urgency reales según el caso.
+
+CAMPOS:
+1. status: "sana" | "leve" | "problema" (clasificación principal).
+2. problem: nombre claro y corto. Si status="sana" usa "Sin problemas detectados".
+3. issueType: tipo técnico cuando hay problema; "ninguno" si está sana.
+4. severity y urgency: realistas, no infladas.
+5. explanation: 2-3 frases sin jerga, basada en lo que se ve.
+6. cause: causa probable concreta. Si está sana, describe por qué se ve bien.
+7. steps: 3-6 acciones concretas. Si está sana, son de mantenimiento.
+8. recovery: tiempo estimado. Si está sana, indica "No requiere recuperación".
+9. elkar: 1-2 frases de mentor, tono acorde al estado (no alarmes si está sana).`;
 
     const remindersGuide = `
 
@@ -134,9 +157,19 @@ Genera un plan nutricional orientativo adaptado a la etapa de la planta y al dia
                   type: "object",
                   properties: {
                     plant: { type: "string", description: "Tipo de planta detectada (ej: Cannabis, Tomate, Desconocida)" },
+                    status: {
+                      type: "string",
+                      enum: ["sana", "leve", "problema"],
+                      description: "Clasificación principal: sana = sin problemas, leve = ligera desviación, problema = síntomas claros.",
+                    },
                     problem: { type: "string", description: "Nombre breve del problema (ej: Exceso de nitrógeno)" },
                     severity: { type: "string", enum: ["leve", "moderado", "grave"] },
                     urgency: { type: "string", enum: ["baja", "media", "alta"] },
+                    issueType: {
+                      type: "string",
+                      enum: ["exceso", "carencia", "estres", "plaga", "ninguno"],
+                      description: "Tipo técnico cuando hay problema; 'ninguno' si la planta está sana.",
+                    },
                     cause: { type: "string", description: "Causa probable, 1-2 frases" },
                     explanation: { type: "string", description: "Explicación sencilla, 2-3 frases" },
                     steps: {
@@ -215,7 +248,7 @@ Genera un plan nutricional orientativo adaptado a la etapa de la planta y al dia
                       additionalProperties: false,
                     },
                   },
-                  required: ["plant", "problem", "severity", "urgency", "cause", "explanation", "steps", "recovery", "elkar", "reminders", "nutritionPlan"],
+                  required: ["plant", "status", "problem", "severity", "urgency", "issueType", "cause", "explanation", "steps", "recovery", "elkar", "reminders", "nutritionPlan"],
                   additionalProperties: false,
                 },
               },
