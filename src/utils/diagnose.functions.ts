@@ -8,6 +8,9 @@ type DiagnosisResult = {
   severity: "leve" | "moderado" | "grave";
   urgency: "baja" | "media" | "alta";
   issueType?: "exceso" | "carencia" | "estres" | "plaga" | "ninguno";
+  confidence: number;
+  growthPhase: "plantula" | "vegetativo" | "floracion" | "desconocida";
+  nearRisk: { level: "ninguno" | "bajo" | "medio" | "alto"; message: string };
   cause: string;
   explanation: string;
   steps: string[];
@@ -49,10 +52,10 @@ export const diagnosePlant = createServerFn({ method: "POST" })
     const systemPrompt = `Eres ELKAR, mentor botánico experto en cultivo de cannabis y plantas en general (indoor, outdoor, hidroponía y suelo). Tu rol es diagnosticar con precisión a partir de una imagen y guiar al cultivador como un maestro paciente.
 
 TONO:
-- Experto pero cercano. Hablas claro, sin tecnicismos innecesarios.
-- Cuando uses un término técnico (ej: clorosis, tricomas, EC, pH), explícalo en una frase.
-- Directo, sin rodeos. Nunca alarmista, nunca condescendiente.
-- Te diriges al cultivador en segunda persona ("tu planta", "revisa", "ajusta").
+- Cultivador experto que habla con otro cultivador. Cercano, humano, sin lenguaje robótico.
+- Frases cortas y naturales. Nada de tecnicismos vacíos. Si usas un término técnico (clorosis, EC, pH), lo explicas en una frase.
+- Directo, tranquilo, sin alarmismo ni condescendencia. Te diriges en segunda persona ("tu planta", "revisa", "ajusta").
+- Ejemplos del tono ELKAR: "Se ve sana. Buen trabajo. Mantén este ritmo.", "Todo en orden por ahora.", "Va bien. No toques mucho.", "Ojo aquí, esto puede ir a más."
 
 REGLAS DE DIAGNÓSTICO:
 - Observa color de hojas, manchas, bordes quemados, forma, turgencia, sustrato visible y entorno.
@@ -88,7 +91,22 @@ CAMPOS:
 6. cause: causa probable concreta. Si está sana, describe por qué se ve bien.
 7. steps: 3-6 acciones concretas. Si está sana, son de mantenimiento.
 8. recovery: tiempo estimado. Si está sana, indica "No requiere recuperación".
-9. elkar: 1-2 frases de mentor, tono acorde al estado (no alarmes si está sana).`;
+9. elkar: 1-2 frases de mentor en tono ELKAR (humano, cultivador, frases cortas). Acorde al estado (no alarmes si está sana).
+10. confidence: número entero 0-100 de confianza del diagnóstico, basado en claridad real de los síntomas visibles.
+    · 85-100 → síntomas claros e inequívocos.
+    · 60-84 → interpretación probable, hay margen.
+    · <60 → pocas señales visibles, foto pobre o ambigua.
+    Sé honesto. No infles la confianza. Si la imagen es ambigua, baja el valor.
+11. growthPhase: fase del cultivo identificada visualmente. UNO de: "plantula", "vegetativo", "floracion".
+    · plantula: pocas hojas, tallo fino, planta muy joven.
+    · vegetativo: estructura desarrollada, sin flores ni cogollos.
+    · floracion: flores, cogollos, pistilos o tricomas visibles.
+    Si hay duda real, elige la más probable según tamaño y estructura. Solo usa "desconocida" si la imagen no permite verlo en absoluto.
+12. nearRisk: predicción preventiva a corto plazo (24-72h).
+    · level: "ninguno" | "bajo" | "medio" | "alto".
+    · message: 1 frase concreta. Si no hay riesgo real, level="ninguno" y message="Sin riesgos detectados a corto plazo.".
+    Ejemplos válidos: "Riesgo de sobre riego en 48h si mantienes esta frecuencia.", "Posible carencia de Mg si no ajustas el pH del agua.", "Si la temperatura sigue alta, riesgo de estrés térmico en 2-3 días."
+    NO inventes riesgos. Solo usa level distinto de "ninguno" si hay un patrón claro en la imagen o el contexto.`;
 
     const remindersGuide = `
 
@@ -170,6 +188,25 @@ Genera un plan nutricional orientativo adaptado a la etapa de la planta y al dia
                       enum: ["exceso", "carencia", "estres", "plaga", "ninguno"],
                       description: "Tipo técnico cuando hay problema; 'ninguno' si la planta está sana.",
                     },
+                    confidence: {
+                      type: "number",
+                      description: "Confianza del diagnóstico de 0 a 100, basada en claridad de síntomas visibles.",
+                    },
+                    growthPhase: {
+                      type: "string",
+                      enum: ["plantula", "vegetativo", "floracion", "desconocida"],
+                      description: "Fase del cultivo detectada visualmente.",
+                    },
+                    nearRisk: {
+                      type: "object",
+                      description: "Predicción preventiva a corto plazo (24-72h).",
+                      properties: {
+                        level: { type: "string", enum: ["ninguno", "bajo", "medio", "alto"] },
+                        message: { type: "string", description: "Frase corta y concreta del riesgo o 'Sin riesgos detectados a corto plazo.'" },
+                      },
+                      required: ["level", "message"],
+                      additionalProperties: false,
+                    },
                     cause: { type: "string", description: "Causa probable, 1-2 frases" },
                     explanation: { type: "string", description: "Explicación sencilla, 2-3 frases" },
                     steps: {
@@ -248,7 +285,7 @@ Genera un plan nutricional orientativo adaptado a la etapa de la planta y al dia
                       additionalProperties: false,
                     },
                   },
-                  required: ["plant", "status", "problem", "severity", "urgency", "issueType", "cause", "explanation", "steps", "recovery", "elkar", "reminders", "nutritionPlan"],
+                  required: ["plant", "status", "problem", "severity", "urgency", "issueType", "confidence", "growthPhase", "nearRisk", "cause", "explanation", "steps", "recovery", "elkar", "reminders", "nutritionPlan"],
                   additionalProperties: false,
                 },
               },
