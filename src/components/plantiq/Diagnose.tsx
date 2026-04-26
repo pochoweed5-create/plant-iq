@@ -480,6 +480,13 @@ export function Diagnose() {
                 className="hidden"
                 onChange={(e) => e.target.files?.[0] && onFile(e.target.files[0])}
               />
+              <input
+                ref={galleryRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={(e) => e.target.files?.[0] && onFile(e.target.files[0])}
+              />
 
               <div className="mt-5">
                 <label className="text-xs text-muted-foreground uppercase tracking-wider">Contexto (opcional)</label>
