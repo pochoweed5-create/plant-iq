@@ -492,6 +492,9 @@ export function Diagnose() {
                   {/* Header: planta + estado principal */}
                   {(() => {
                     const status = statusMeta[result.status] ?? statusMeta.problema;
+                    const phase = phaseMeta[result.growthPhase] ?? phaseMeta.desconocida;
+                    const conf = Math.max(0, Math.min(100, Math.round(result.confidence ?? 0)));
+                    const tier = confidenceTier(conf);
                     return (
                       <div>
                         <div className="flex items-center gap-2 flex-wrap">
@@ -500,12 +503,53 @@ export function Diagnose() {
                             <span aria-hidden>{status.emoji}</span>
                             Estado · {status.label}
                           </span>
+                          <span className={`inline-flex items-center gap-1.5 text-[11px] uppercase tracking-wider px-2.5 py-1 rounded-full border ${phase.tone}`}>
+                            <Sprout className="h-3 w-3" />
+                            Fase · {phase.label}
+                          </span>
                           {result.status === "problema" && (
                             <span className={`text-[11px] uppercase tracking-wider px-2 py-0.5 rounded-full border ${severityColor[result.severity] ?? severityColor.moderado}`}>
                               Gravedad {result.severity}
                             </span>
                           )}
                         </div>
+
+                        {/* Confianza del diagnóstico */}
+                        <div className={`mt-3 rounded-xl border p-3 sm:p-3.5 ${tier.tone}`}>
+                          <div className="flex items-center justify-between gap-3">
+                            <div className="flex items-center gap-2 min-w-0">
+                              <Activity className="h-3.5 w-3.5 flex-shrink-0" />
+                              <span className="text-[11px] uppercase tracking-wider opacity-90">
+                                Confianza del diagnóstico · {tier.label}
+                              </span>
+                            </div>
+                            <span className="text-sm font-semibold tabular-nums text-foreground">{conf}%</span>
+                          </div>
+                          <div className="mt-2 h-1.5 w-full rounded-full bg-background/40 overflow-hidden">
+                            <div className={`h-full ${tier.barClass} transition-all`} style={{ width: `${conf}%` }} />
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })()}
+
+                  {/* Riesgo próximo */}
+                  {result.nearRisk && (() => {
+                    const r = riskMeta[result.nearRisk.level] ?? riskMeta.ninguno;
+                    const isRisk = result.nearRisk.level !== "ninguno";
+                    return (
+                      <div className={`rounded-2xl border p-4 ${r.tone}`}>
+                        <div className="flex items-center gap-2 mb-1.5">
+                          {isRisk ? <ShieldAlert className="h-4 w-4" /> : <TrendingUp className="h-4 w-4" />}
+                          <span className="text-[10px] uppercase tracking-[0.2em] opacity-80">Riesgo próximo · 24-72h</span>
+                          <span className="text-[10px] uppercase tracking-wider px-1.5 py-0.5 rounded-full border border-current/40 bg-background/20">
+                            {r.label}
+                          </span>
+                        </div>
+                        <p className="text-[13px] text-foreground/90 leading-relaxed">
+                          <span aria-hidden className="mr-1">{r.emoji}</span>
+                          {result.nearRisk.message}
+                        </p>
                       </div>
                     );
                   })()}
