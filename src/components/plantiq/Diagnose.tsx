@@ -868,7 +868,188 @@ export function Diagnose() {
         </p>
       </div>
       <PhotoGuide open={guideOpen} onClose={() => setGuideOpen(false)} />
+      {cameraOpen && (
+        <CameraCapture
+          onClose={() => setCameraOpen(false)}
+          onCapture={async (file) => {
+            setCameraOpen(false);
+            await onFile(file);
+          }}
+        />
+      )}
     </section>
+  );
+}
+
+function CameraCapture({ onClose, onCapture }: { onClose: () => void; onCapture: (file: File) => void }) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const streamRef = useRef<MediaStream | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [shot, setShot] = useState<string | null>(null);
+  const [facing, setFacing] = useState<"environment" | "user">("environment");
+  const [starting, setStarting] = useState(true);
+
+  function stop() {
+    streamRef.current?.getTracks().forEach((t) => t.stop());
+    streamRef.current = null;
+  }
+
+  async function start(mode: "environment" | "user") {
+    stop();
+    setStarting(true);
+    setError(null);
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: { ideal: mode }, width: { ideal: 1920 }, height: { ideal: 1920 } },
+        audio: false,
+      });
+      streamRef.current = stream;
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+        await videoRef.current.play().catch(() => {});
+      }
+    } catch (e) {
+      setError(
+        e instanceof Error && e.name === "NotAllowedError"
+          ? "Permiso de cámara denegado. Usa la galería o habilita el permiso en tu navegador."
+          : "No pudimos acceder a la cámara. Usa la galería como alternativa.",
+      );
+    } finally {
+      setStarting(false);
+    }
+  }
+
+  useEffect(() => {
+    start(facing);
+    return () => stop();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [facing]);
+
+  function takeShot() {
+    const v = videoRef.current;
+    if (!v || !v.videoWidth) return;
+    const maxSide = 1600;
+    const scale = Math.min(1, maxSide / Math.max(v.videoWidth, v.videoHeight));
+    const w = Math.round(v.videoWidth * scale);
+    const h = Math.round(v.videoHeight * scale);
+    const canvas = document.createElement("canvas");
+    canvas.width = w;
+    canvas.height = h;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    ctx.drawImage(v, 0, 0, w, h);
+    const dataUrl = canvas.toDataURL("image/jpeg", 0.9);
+    setShot(dataUrl);
+  }
+
+  function confirmShot() {
+    if (!shot) return;
+    fetch(shot)
+      .then((r) => r.blob())
+      .then((blob) => {
+        const file = new File([blob], `plantiq-${Date.now()}.jpg`, { type: "image/jpeg" });
+        onCapture(file);
+      });
+  }
+
+  return (
+    <div className="fixed inset-0 z-[100] bg-background/95 backdrop-blur-md flex flex-col">
+      <div className="flex items-center justify-between px-5 py-4 border-b border-border/60">
+        <div className="flex items-center gap-2">
+          <Camera className="h-4 w-4 text-gold" />
+          <span className="text-sm font-medium">Hacer foto</span>
+        </div>
+        <button
+          type="button"
+          onClick={onClose}
+          className="h-9 w-9 inline-flex items-center justify-center rounded-full border border-border hover:bg-accent transition-smooth"
+          aria-label="Cerrar cámara"
+        >
+          <X className="h-4 w-4" />
+        </button>
+      </div>
+
+      <div className="flex-1 relative overflow-hidden flex items-center justify-center bg-black">
+        {error ? (
+          <div className="text-center px-6 max-w-sm">
+            <AlertTriangle className="h-8 w-8 text-destructive mx-auto mb-3" />
+            <p className="text-sm text-foreground/90">{error}</p>
+            <button
+              type="button"
+              onClick={onClose}
+              className="mt-5 text-sm px-4 py-2 rounded-full bg-gold/15 border border-gold/40 text-gold hover:bg-gold/20 transition-smooth"
+            >
+              Volver y usar galería
+            </button>
+          </div>
+        ) : shot ? (
+          <img src={shot} alt="Vista previa" className="max-h-full max-w-full object-contain" />
+        ) : (
+          <>
+            <video
+              ref={videoRef}
+              playsInline
+              muted
+              className="max-h-full max-w-full object-contain"
+            />
+            {/* Guía de encuadre */}
+            <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+              <div className="w-[78%] aspect-square max-w-md rounded-2xl border-2 border-gold/70 shadow-[0_0_0_9999px_rgba(0,0,0,0.35)]" />
+            </div>
+            <div className="pointer-events-none absolute top-4 left-1/2 -translate-x-1/2 px-3 py-1.5 rounded-full bg-background/70 border border-border/60 text-[11px] text-foreground/90">
+              Acerca la cámara a las hojas y enfoca bien los detalles
+            </div>
+            {starting && (
+              <div className="absolute inset-0 flex items-center justify-center bg-black/40">
+                <Loader2 className="h-7 w-7 text-gold animate-spin" />
+              </div>
+            )}
+          </>
+        )}
+      </div>
+
+      {!error && (
+        <div className="px-5 py-5 border-t border-border/60 bg-card/40">
+          {shot ? (
+            <div className="flex items-center justify-between gap-3 max-w-md mx-auto">
+              <button
+                type="button"
+                onClick={() => setShot(null)}
+                className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 rounded-full border border-border hover:bg-accent transition-smooth text-sm"
+              >
+                <RefreshCw className="h-4 w-4" /> Repetir
+              </button>
+              <button
+                type="button"
+                onClick={confirmShot}
+                className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 rounded-full bg-gold text-leaf-deep font-medium hover:bg-gold/90 transition-smooth text-sm"
+              >
+                <Check className="h-4 w-4" /> Usar esta foto
+              </button>
+            </div>
+          ) : (
+            <div className="flex items-center justify-center gap-6 max-w-md mx-auto">
+              <button
+                type="button"
+                onClick={() => setFacing((f) => (f === "environment" ? "user" : "environment"))}
+                className="h-11 w-11 inline-flex items-center justify-center rounded-full border border-border hover:bg-accent transition-smooth"
+                aria-label="Cambiar cámara"
+              >
+                <SwitchCamera className="h-4 w-4" />
+              </button>
+              <button
+                type="button"
+                onClick={takeShot}
+                disabled={starting}
+                className="h-16 w-16 rounded-full bg-gold border-4 border-background hover:scale-105 active:scale-95 transition-transform disabled:opacity-50 disabled:cursor-not-allowed shadow-elegant"
+                aria-label="Capturar"
+              />
+              <span className="h-11 w-11" aria-hidden />
+            </div>
+          )}
+        </div>
+      )}
+    </div>
   );
 }
 
