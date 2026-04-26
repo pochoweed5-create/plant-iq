@@ -8,6 +8,9 @@ type DiagnosisResult = {
   severity: "leve" | "moderado" | "grave";
   urgency: "baja" | "media" | "alta";
   issueType?: "exceso" | "carencia" | "estres" | "plaga" | "ninguno";
+  confidence: number;
+  growthPhase: "plantula" | "vegetativo" | "floracion" | "desconocida";
+  nearRisk: { level: "ninguno" | "bajo" | "medio" | "alto"; message: string };
   cause: string;
   explanation: string;
   steps: string[];
