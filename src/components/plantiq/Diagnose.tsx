@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { diagnosePlant } from "@/utils/diagnose.functions";
-import { Upload, Loader2, AlertTriangle, CheckCircle2, Clock, Sparkles, RotateCcw, Sun, Focus, Crop, Leaf, Camera, Droplets, FlaskConical, Eye, Stethoscope, Bell, BellRing, Repeat, Sprout, FlaskRound, Beaker, Gauge, AlertCircle } from "lucide-react";
+import { Upload, Loader2, AlertTriangle, CheckCircle2, Clock, Sparkles, RotateCcw, Sun, Focus, Crop, Leaf, Camera, Droplets, FlaskConical, Eye, Stethoscope, Bell, BellRing, Repeat, Sprout, FlaskRound, Beaker, Gauge, AlertCircle, Activity, ShieldAlert, TrendingUp } from "lucide-react";
 import { Bookmark, BookmarkCheck } from "lucide-react";
 import { PhotoGuide } from "./PhotoGuide";
 
@@ -42,6 +42,26 @@ const issueTypeLabel: Record<string, string> = {
   plaga: "Plaga / enfermedad",
   ninguno: "Sin tipología",
 };
+
+const phaseMeta: Record<string, { label: string; tone: string }> = {
+  plantula: { label: "Plántula", tone: "text-emerald-200 border-emerald-400/30 bg-emerald-500/10" },
+  vegetativo: { label: "Vegetativo", tone: "text-emerald-300 border-emerald-400/30 bg-emerald-500/10" },
+  floracion: { label: "Floración", tone: "text-fuchsia-300 border-fuchsia-400/30 bg-fuchsia-500/10" },
+  desconocida: { label: "Fase por confirmar", tone: "text-muted-foreground border-border/60 bg-card/40" },
+};
+
+const riskMeta: Record<string, { label: string; tone: string; emoji: string }> = {
+  ninguno: { label: "Sin riesgo", tone: "text-emerald-300 border-emerald-400/30 bg-emerald-500/10", emoji: "✅" },
+  bajo: { label: "Riesgo bajo", tone: "text-emerald-200 border-emerald-400/30 bg-emerald-500/10", emoji: "🟢" },
+  medio: { label: "Riesgo medio", tone: "text-amber-200 border-amber-400/30 bg-amber-500/10", emoji: "⚠️" },
+  alto: { label: "Riesgo alto", tone: "text-rose-300 border-rose-400/30 bg-rose-500/10", emoji: "⚠️" },
+};
+
+function confidenceTier(c: number): { label: string; tone: string; barClass: string } {
+  if (c >= 85) return { label: "Alta", tone: "text-emerald-300 border-emerald-400/40 bg-emerald-500/10", barClass: "bg-emerald-400" };
+  if (c >= 60) return { label: "Media", tone: "text-amber-200 border-amber-400/40 bg-amber-500/10", barClass: "bg-amber-300" };
+  return { label: "Baja", tone: "text-rose-300 border-rose-400/40 bg-rose-500/10", barClass: "bg-rose-400" };
+}
 
 const reminderMeta: Record<string, { icon: typeof Droplets; label: string; tone: string }> = {
   riego: { icon: Droplets, label: "Riego", tone: "text-sky-300 border-sky-400/30 bg-sky-500/10" },
