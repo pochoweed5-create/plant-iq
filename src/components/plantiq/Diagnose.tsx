@@ -400,33 +400,66 @@ export function Diagnose() {
                     </ul>
                   </div>
 
-                  {/* Uploader */}
-                  <label
-                    htmlFor="plantfile"
-                    aria-disabled={!allChecked}
-                    onClick={(e) => {
-                      if (!allChecked) e.preventDefault();
-                    }}
-                    className={`flex flex-col items-center justify-center text-center min-h-[200px] rounded-2xl border-2 border-dashed transition-smooth p-8 ${
-                      allChecked
-                        ? "border-gold/50 hover:border-gold bg-leaf-card/40 cursor-pointer"
-                        : "border-border/60 bg-background/20 cursor-not-allowed opacity-60"
+                  {/* Acciones de captura */}
+                  <div
+                    className={`rounded-2xl border-2 border-dashed p-6 sm:p-8 transition-smooth ${
+                      allChecked ? "border-gold/50 bg-leaf-card/40" : "border-border/60 bg-background/20 opacity-60"
                     }`}
                   >
-                    <span
-                      className={`h-14 w-14 rounded-full border flex items-center justify-center mb-4 ${
-                        allChecked ? "bg-gold/15 border-gold/40 text-gold" : "bg-muted/30 border-border text-muted-foreground"
-                      }`}
-                    >
-                      <Upload className="h-6 w-6" />
-                    </span>
-                    <span className="font-serif text-xl">
-                      {allChecked ? "Arrastra o sube tu foto" : "Confirma el checklist primero"}
-                    </span>
-                    <span className="text-sm text-muted-foreground mt-2">
-                      {allChecked ? "JPG, PNG · máx. 8 MB" : "Marca los 4 puntos para activar la subida"}
-                    </span>
-                  </label>
+                    <div className="text-center mb-5">
+                      <p className="font-serif text-xl">
+                        {allChecked ? "Captura tu planta" : "Confirma el checklist primero"}
+                      </p>
+                      <p className="text-sm text-muted-foreground mt-1.5">
+                        {allChecked
+                          ? "Acerca la cámara a las hojas y enfoca bien los detalles."
+                          : "Marca los 4 puntos para activar la captura."}
+                      </p>
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <button
+                        type="button"
+                        disabled={!allChecked}
+                        onClick={() => allChecked && setCameraOpen(true)}
+                        className={`group flex flex-col items-center justify-center gap-2 rounded-xl border px-4 py-5 transition-smooth ${
+                          allChecked
+                            ? "border-gold/50 bg-gold/10 text-gold hover:bg-gold/15 cursor-pointer"
+                            : "border-border/60 bg-background/20 text-muted-foreground cursor-not-allowed"
+                        }`}
+                      >
+                        <span className={`h-12 w-12 rounded-full border flex items-center justify-center ${
+                          allChecked ? "border-gold/50 bg-gold/15" : "border-border bg-muted/20"
+                        }`}>
+                          <Camera className="h-5 w-5" />
+                        </span>
+                        <span className="text-base font-medium">📸 Hacer foto</span>
+                        <span className="text-[11px] text-muted-foreground">Cámara en vivo</span>
+                      </button>
+                      <button
+                        type="button"
+                        disabled={!allChecked}
+                        onClick={() => allChecked && galleryRef.current?.click()}
+                        className={`group flex flex-col items-center justify-center gap-2 rounded-xl border px-4 py-5 transition-smooth ${
+                          allChecked
+                            ? "border-border hover:border-gold/40 bg-background/30 hover:bg-leaf-card/40 cursor-pointer"
+                            : "border-border/60 bg-background/20 text-muted-foreground cursor-not-allowed"
+                        }`}
+                      >
+                        <span className={`h-12 w-12 rounded-full border flex items-center justify-center ${
+                          allChecked ? "border-border bg-muted/20 text-foreground" : "border-border bg-muted/20 text-muted-foreground"
+                        }`}>
+                          <ImageIcon className="h-5 w-5" />
+                        </span>
+                        <span className="text-base font-medium">🖼️ Subir desde galería</span>
+                        <span className="text-[11px] text-muted-foreground">JPG · PNG · máx. 8 MB</span>
+                      </button>
+                    </div>
+                    <ul className="mt-5 grid sm:grid-cols-3 gap-1.5 text-[11px] text-muted-foreground">
+                      <li className="flex items-center gap-1.5"><Sun className="h-3 w-3 text-gold/70" /> Evita sombras fuertes</li>
+                      <li className="flex items-center gap-1.5"><Focus className="h-3 w-3 text-gold/70" /> Haz la foto de cerca</li>
+                      <li className="flex items-center gap-1.5"><Leaf className="h-3 w-3 text-gold/70" /> Muestra las hojas afectadas</li>
+                    </ul>
+                  </div>
                 </div>
               ) : (
                 <div className="relative rounded-2xl overflow-hidden border border-border/60 min-h-[280px]">
