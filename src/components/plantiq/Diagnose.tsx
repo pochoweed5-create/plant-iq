@@ -14,6 +14,35 @@ const severityColor: Record<string, string> = {
   grave: "text-red-300 border-red-400/40 bg-red-500/10",
 };
 
+const statusMeta: Record<string, { label: string; emoji: string; tone: string; sectionLabel: string }> = {
+  sana: {
+    label: "Planta sana",
+    emoji: "✅",
+    tone: "text-emerald-300 border-emerald-400/40 bg-emerald-500/10",
+    sectionLabel: "Estado de la planta",
+  },
+  leve: {
+    label: "Leve desviación",
+    emoji: "⚠️",
+    tone: "text-amber-200 border-amber-400/40 bg-amber-500/10",
+    sectionLabel: "Detalle a vigilar",
+  },
+  problema: {
+    label: "Problema detectado",
+    emoji: "❗",
+    tone: "text-rose-300 border-rose-400/40 bg-rose-500/10",
+    sectionLabel: "Problema detectado",
+  },
+};
+
+const issueTypeLabel: Record<string, string> = {
+  exceso: "Exceso (agua / nutrientes)",
+  carencia: "Carencia (N, P, K, microelementos)",
+  estres: "Estrés ambiental (luz, calor, viento)",
+  plaga: "Plaga / enfermedad",
+  ninguno: "Sin tipología",
+};
+
 const reminderMeta: Record<string, { icon: typeof Droplets; label: string; tone: string }> = {
   riego: { icon: Droplets, label: "Riego", tone: "text-sky-300 border-sky-400/30 bg-sky-500/10" },
   fertilizacion: { icon: FlaskConical, label: "Fertilización", tone: "text-emerald-300 border-emerald-400/30 bg-emerald-500/10" },
