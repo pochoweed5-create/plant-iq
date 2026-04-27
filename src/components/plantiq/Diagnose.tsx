@@ -599,8 +599,24 @@ export function Diagnose() {
                     const phase = phaseMeta[result.growthPhase] ?? phaseMeta.desconocida;
                     const conf = Math.max(0, Math.min(100, Math.round(result.confidence ?? 0)));
                     const tier = confidenceTier(conf);
+                    const urg = urgencyMeta[result.urgency] ?? urgencyMeta.media;
                     return (
                       <div>
+                        {/* Indicador de urgencia destacado */}
+                        {result.status !== "sana" && (
+                          <div className={`mb-3 rounded-xl border px-3 py-2 flex items-center gap-2.5 ${urg.tone}`}>
+                            <span className="relative flex h-3 w-3 flex-shrink-0">
+                              <span className={`absolute inline-flex h-full w-full rounded-full ${urg.dot} opacity-60 ${result.urgency === "alta" ? "animate-ping" : ""}`} />
+                              <span className={`relative inline-flex rounded-full h-3 w-3 ${urg.dot}`} />
+                            </span>
+                            <span className="text-[11px] uppercase tracking-[0.18em] font-medium">
+                              {urg.emoji} {urg.label}
+                            </span>
+                            <span className="text-[11px] text-foreground/70 ml-auto">
+                              {result.urgency === "alta" ? "Actúa ya" : result.urgency === "media" ? "Atiende esta semana" : "Sin prisa"}
+                            </span>
+                          </div>
+                        )}
                         <div className="flex items-center gap-2 flex-wrap">
                           <span className="text-xs uppercase tracking-wider text-muted-foreground">{result.plant}</span>
                           <span className={`inline-flex items-center gap-1.5 text-[11px] uppercase tracking-wider px-2.5 py-1 rounded-full border ${status.tone}`}>
