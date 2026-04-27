@@ -552,10 +552,28 @@ export function Diagnose() {
               )}
 
               {loading && (
-                <div className="flex-1 flex flex-col items-center justify-center text-center">
-                  <Loader2 className="h-8 w-8 text-gold animate-spin mb-4" />
-                  <p className="font-serif text-xl">ELKAR está analizando…</p>
-                  <p className="text-sm text-muted-foreground mt-2">Esto suele tardar 2–5 segundos.</p>
+                <div className="flex-1 flex flex-col items-center justify-center text-center px-2">
+                  <div className="relative h-20 w-20 mb-5">
+                    <div className="absolute inset-0 rounded-full border-2 border-gold/20" />
+                    <div className="absolute inset-0 rounded-full border-2 border-transparent border-t-gold animate-spin" />
+                    <div className="absolute inset-2 rounded-full bg-gold/10 flex items-center justify-center">
+                      <Leaf className="h-7 w-7 text-gold animate-pulse" />
+                    </div>
+                  </div>
+                  <p className="font-serif text-xl text-foreground transition-opacity duration-300">
+                    {loadingMessages[loadingMsgIdx]}
+                  </p>
+                  <div className="mt-4 flex items-center gap-1.5">
+                    <span className="h-1.5 w-1.5 rounded-full bg-gold animate-bounce" style={{ animationDelay: "0ms" }} />
+                    <span className="h-1.5 w-1.5 rounded-full bg-gold animate-bounce" style={{ animationDelay: "150ms" }} />
+                    <span className="h-1.5 w-1.5 rounded-full bg-gold animate-bounce" style={{ animationDelay: "300ms" }} />
+                  </div>
+                  <div className="mt-5 w-full max-w-[220px] h-1 rounded-full bg-gold/10 overflow-hidden">
+                    <div className="h-full w-1/3 bg-gradient-to-r from-transparent via-gold to-transparent animate-[shimmer_1.4s_ease-in-out_infinite]" />
+                  </div>
+                  <p className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground mt-4">
+                    ELKAR · análisis en curso
+                  </p>
                 </div>
               )}
 
