@@ -674,11 +674,6 @@ export function Diagnose() {
                     );
                   })()}
 
-                  {/* Acción nutricional de hoy */}
-                  {result.status !== "sana" && (() => {
-                    return null;
-                  })()}
-
                   {/* Qué hacer hoy · acciones inmediatas */}
                   {result.status !== "sana" && result.steps?.length > 0 && (
                     <div className="rounded-2xl border border-gold/40 bg-gradient-to-br from-gold/[0.08] to-gold/[0.02] p-4 sm:p-5">
