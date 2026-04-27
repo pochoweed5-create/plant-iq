@@ -14,6 +14,27 @@ const severityColor: Record<string, string> = {
   grave: "text-red-300 border-red-400/40 bg-red-500/10",
 };
 
+const urgencyMeta: Record<string, { dot: string; label: string; tone: string; emoji: string }> = {
+  baja: {
+    dot: "bg-emerald-400",
+    label: "Urgencia baja",
+    tone: "text-emerald-300 border-emerald-400/40 bg-emerald-500/10",
+    emoji: "🟢",
+  },
+  media: {
+    dot: "bg-amber-300",
+    label: "Urgencia media",
+    tone: "text-amber-200 border-amber-400/40 bg-amber-500/10",
+    emoji: "🟡",
+  },
+  alta: {
+    dot: "bg-rose-400",
+    label: "Urgencia alta",
+    tone: "text-rose-300 border-rose-400/40 bg-rose-500/10",
+    emoji: "🔴",
+  },
+};
+
 const statusMeta: Record<string, { label: string; emoji: string; tone: string; sectionLabel: string }> = {
   sana: {
     label: "Planta sana",
