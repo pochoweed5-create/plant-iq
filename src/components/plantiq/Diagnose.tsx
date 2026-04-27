@@ -301,6 +301,26 @@ export function Diagnose() {
   const [cameraOpen, setCameraOpen] = useState(false);
   const diagnose = useServerFn(diagnosePlant);
 
+  const loadingMessages = [
+    "Analizando planta...",
+    "Detectando anomalías...",
+    "Evaluando salud...",
+    "Revisando hojas y color...",
+    "Preparando diagnóstico...",
+  ];
+  const [loadingMsgIdx, setLoadingMsgIdx] = useState(0);
+
+  useEffect(() => {
+    if (!loading) {
+      setLoadingMsgIdx(0);
+      return;
+    }
+    const id = setInterval(() => {
+      setLoadingMsgIdx((i) => (i + 1) % loadingMessages.length);
+    }, 1100);
+    return () => clearInterval(id);
+  }, [loading]);
+
   const allChecked = checklistItems.every((i) => checked[i.key]);
 
   function toggle(key: string) {
