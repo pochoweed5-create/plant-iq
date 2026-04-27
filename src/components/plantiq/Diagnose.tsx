@@ -14,6 +14,27 @@ const severityColor: Record<string, string> = {
   grave: "text-red-300 border-red-400/40 bg-red-500/10",
 };
 
+const urgencyMeta: Record<string, { dot: string; label: string; tone: string; emoji: string }> = {
+  baja: {
+    dot: "bg-emerald-400",
+    label: "Urgencia baja",
+    tone: "text-emerald-300 border-emerald-400/40 bg-emerald-500/10",
+    emoji: "🟢",
+  },
+  media: {
+    dot: "bg-amber-300",
+    label: "Urgencia media",
+    tone: "text-amber-200 border-amber-400/40 bg-amber-500/10",
+    emoji: "🟡",
+  },
+  alta: {
+    dot: "bg-rose-400",
+    label: "Urgencia alta",
+    tone: "text-rose-300 border-rose-400/40 bg-rose-500/10",
+    emoji: "🔴",
+  },
+};
+
 const statusMeta: Record<string, { label: string; emoji: string; tone: string; sectionLabel: string }> = {
   sana: {
     label: "Planta sana",
@@ -280,6 +301,26 @@ export function Diagnose() {
   const [cameraOpen, setCameraOpen] = useState(false);
   const diagnose = useServerFn(diagnosePlant);
 
+  const loadingMessages = [
+    "Analizando planta...",
+    "Detectando anomalías...",
+    "Evaluando salud...",
+    "Revisando hojas y color...",
+    "Preparando diagnóstico...",
+  ];
+  const [loadingMsgIdx, setLoadingMsgIdx] = useState(0);
+
+  useEffect(() => {
+    if (!loading) {
+      setLoadingMsgIdx(0);
+      return;
+    }
+    const id = setInterval(() => {
+      setLoadingMsgIdx((i) => (i + 1) % loadingMessages.length);
+    }, 1100);
+    return () => clearInterval(id);
+  }, [loading]);
+
   const allChecked = checklistItems.every((i) => checked[i.key]);
 
   function toggle(key: string) {
@@ -511,10 +552,31 @@ export function Diagnose() {
               )}
 
               {loading && (
-                <div className="flex-1 flex flex-col items-center justify-center text-center">
-                  <Loader2 className="h-8 w-8 text-gold animate-spin mb-4" />
-                  <p className="font-serif text-xl">ELKAR está analizando…</p>
-                  <p className="text-sm text-muted-foreground mt-2">Esto suele tardar 2–5 segundos.</p>
+                <div className="flex-1 flex flex-col items-center justify-center text-center px-2">
+                  <div className="relative h-20 w-20 mb-5">
+                    <div className="absolute inset-0 rounded-full border-2 border-gold/20" />
+                    <div className="absolute inset-0 rounded-full border-2 border-transparent border-t-gold animate-spin" />
+                    <div className="absolute inset-2 rounded-full bg-gold/10 flex items-center justify-center">
+                      <Leaf className="h-7 w-7 text-gold animate-pulse" />
+                    </div>
+                  </div>
+                  <p className="font-serif text-xl text-foreground transition-opacity duration-300">
+                    {loadingMessages[loadingMsgIdx]}
+                  </p>
+                  <div className="mt-4 flex items-center gap-1.5">
+                    <span className="h-1.5 w-1.5 rounded-full bg-gold animate-bounce" style={{ animationDelay: "0ms" }} />
+                    <span className="h-1.5 w-1.5 rounded-full bg-gold animate-bounce" style={{ animationDelay: "150ms" }} />
+                    <span className="h-1.5 w-1.5 rounded-full bg-gold animate-bounce" style={{ animationDelay: "300ms" }} />
+                  </div>
+                  <div className="mt-5 w-full max-w-[220px] h-1 rounded-full bg-gold/10 overflow-hidden relative">
+                    <div
+                      className="absolute inset-y-0 w-1/3 rounded-full bg-gradient-to-r from-transparent via-gold to-transparent"
+                      style={{ animation: "elkar-loader 1.4s ease-in-out infinite" }}
+                    />
+                  </div>
+                  <p className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground mt-4">
+                    ELKAR · análisis en curso
+                  </p>
                 </div>
               )}
 
@@ -537,8 +599,24 @@ export function Diagnose() {
                     const phase = phaseMeta[result.growthPhase] ?? phaseMeta.desconocida;
                     const conf = Math.max(0, Math.min(100, Math.round(result.confidence ?? 0)));
                     const tier = confidenceTier(conf);
+                    const urg = urgencyMeta[result.urgency] ?? urgencyMeta.media;
                     return (
                       <div>
+                        {/* Indicador de urgencia destacado */}
+                        {result.status !== "sana" && (
+                          <div className={`mb-3 rounded-xl border px-3 py-2 flex items-center gap-2.5 ${urg.tone}`}>
+                            <span className="relative flex h-3 w-3 flex-shrink-0">
+                              <span className={`absolute inline-flex h-full w-full rounded-full ${urg.dot} opacity-60 ${result.urgency === "alta" ? "animate-ping" : ""}`} />
+                              <span className={`relative inline-flex rounded-full h-3 w-3 ${urg.dot}`} />
+                            </span>
+                            <span className="text-[11px] uppercase tracking-[0.18em] font-medium">
+                              {urg.emoji} {urg.label}
+                            </span>
+                            <span className="text-[11px] text-foreground/70 ml-auto">
+                              {result.urgency === "alta" ? "Actúa ya" : result.urgency === "media" ? "Atiende esta semana" : "Sin prisa"}
+                            </span>
+                          </div>
+                        )}
                         <div className="flex items-center gap-2 flex-wrap">
                           <span className="text-xs uppercase tracking-wider text-muted-foreground">{result.plant}</span>
                           <span className={`inline-flex items-center gap-1.5 text-[11px] uppercase tracking-wider px-2.5 py-1 rounded-full border ${status.tone}`}>
@@ -595,6 +673,31 @@ export function Diagnose() {
                       </div>
                     );
                   })()}
+
+                  {/* Qué hacer hoy · acciones inmediatas */}
+                  {result.status !== "sana" && result.steps?.length > 0 && (
+                    <div className="rounded-2xl border border-gold/40 bg-gradient-to-br from-gold/[0.08] to-gold/[0.02] p-4 sm:p-5">
+                      <div className="flex items-center gap-2 mb-3">
+                        <span className="h-7 w-7 rounded-full bg-gold/20 border border-gold/40 flex items-center justify-center">
+                          <Sparkles className="h-3.5 w-3.5 text-gold" />
+                        </span>
+                        <div>
+                          <p className="font-serif text-lg leading-none text-foreground">Qué hacer hoy</p>
+                          <p className="text-[10px] uppercase tracking-[0.2em] text-gold/80 mt-1">Acción inmediata</p>
+                        </div>
+                      </div>
+                      <ul className="space-y-2">
+                        {result.steps.slice(0, 3).map((s, i) => (
+                          <li key={i} className="flex gap-2.5 items-start">
+                            <span className="flex-shrink-0 mt-0.5 h-5 w-5 rounded-full bg-gold/20 border border-gold/40 text-gold text-[11px] flex items-center justify-center font-semibold">
+                              {i + 1}
+                            </span>
+                            <span className="text-[13.5px] text-foreground/95 leading-snug">{s}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
 
                   {/* Acción nutricional de hoy */}
                   {result.status !== "sana" && (() => {
