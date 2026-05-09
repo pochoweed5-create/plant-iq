@@ -1,4 +1,5 @@
 import { Leaf } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 
 export function Nav() {
   return (
@@ -16,9 +17,12 @@ export function Nav() {
           <a href="#features" className="hover:text-foreground transition-smooth">Funciones</a>
           <a href="#precios" className="hover:text-foreground transition-smooth">Precios</a>
         </nav>
-        <a href="#diagnostico" className="text-sm px-4 py-2 rounded-full bg-gold text-gold-foreground font-medium hover:opacity-90 transition-smooth shadow-gold-glow">
-          Probar gratis
-        </a>
+        <Link
+          to="/chat"
+          className="text-sm px-4 py-2 rounded-full bg-gold text-gold-foreground font-medium hover:opacity-90 transition-smooth shadow-gold-glow"
+        >
+          Hablar con ELKAR
+        </Link>
       </div>
     </header>
   );
