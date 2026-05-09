@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { diagnosePlant } from "@/utils/diagnose.functions";
-import { Upload, Loader2, AlertTriangle, CheckCircle2, Clock, Sparkles, RotateCcw, Sun, Focus, Crop, Leaf, Camera, Droplets, FlaskConical, Eye, Stethoscope, Bell, BellRing, Repeat, Sprout, FlaskRound, Beaker, Gauge, AlertCircle, Activity, ShieldAlert, TrendingUp, X, RefreshCw, Check, ImageIcon, SwitchCamera } from "lucide-react";
+import { Upload, Loader2, AlertTriangle, CheckCircle2, Clock, Sparkles, RotateCcw, Sun, Focus, Crop, Leaf, Camera, Droplets, FlaskConical, Eye, Stethoscope, Bell, BellRing, Repeat, Sprout, FlaskRound, Beaker, Gauge, AlertCircle, Activity, ShieldAlert, TrendingUp, X, RefreshCw, Check, ImageIcon, SwitchCamera, HelpCircle } from "lucide-react";
 import { Bookmark, BookmarkCheck } from "lucide-react";
 import { PhotoGuide } from "./PhotoGuide";
 
