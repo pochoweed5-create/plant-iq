@@ -741,6 +741,22 @@ export function Diagnose() {
                     <p className="text-sm text-foreground/85 leading-relaxed">{result.explanation}</p>
                   </Section>
 
+                  {/* Por qué pasa esto · callout breve y accionable */}
+                  <div className="rounded-xl border border-gold/25 bg-gold/[0.05] p-4 flex gap-3">
+                    <span className="flex-shrink-0 h-8 w-8 rounded-full bg-gold/15 border border-gold/30 flex items-center justify-center">
+                      <HelpCircle className="h-4 w-4 text-gold" />
+                    </span>
+                    <div className="min-w-0">
+                      <div className="text-[11px] uppercase tracking-wider text-gold mb-1">Por qué pasa esto</div>
+                      <p className="text-sm text-foreground/90 leading-relaxed">
+                        {result.cause}
+                        {result.status !== "sana" && result.steps?.[0] && (
+                          <> <span className="text-foreground/70">Empieza por: {result.steps[0]}</span></>
+                        )}
+                      </p>
+                    </div>
+                  </div>
+
                   {/* 3. Causa probable / Por qué se ve así */}
                   <Section index={3} label={result.status === "sana" ? "Por qué se ve sana" : "Causa probable"}>
                     <div className="rounded-xl bg-leaf-card/60 border border-border/50 p-4">
