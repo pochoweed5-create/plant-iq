@@ -570,42 +570,47 @@ function TypingDots() {
 }
 
 function renderMarkdownLite(text: string) {
-  // Minimal markdown: **bold**, *italic*, lists, line breaks. Safe (no HTML).
   const escape = (s: string) =>
     s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  const inline = (s: string) =>
+    s
+      .replace(/\*\*([^*]+)\*\*/g, "<strong class='text-gold'>$1</strong>")
+      .replace(/\*([^*]+)\*/g, "<em>$1</em>")
+      .replace(/`([^`]+)`/g, "<code class='px-1 rounded bg-secondary/60 text-xs'>$1</code>");
   const lines = text.split("\n");
   const out: string[] = [];
-  let inList = false;
+  let listType: "ul" | "ol" | null = null;
+  const closeList = () => {
+    if (listType) {
+      out.push(`</${listType}>`);
+      listType = null;
+    }
+  };
   for (const raw of lines) {
     const line = escape(raw);
     const isBullet = /^\s*[-*•]\s+/.test(line);
     const isNum = /^\s*\d+[.)]\s+/.test(line);
     if (isBullet || isNum) {
-      if (!inList) {
-        out.push(isNum ? "<ol class='list-decimal pl-5 space-y-1 my-1'>" : "<ul class='list-disc pl-5 space-y-1 my-1'>");
-        inList = true;
+      const want: "ul" | "ol" = isNum ? "ol" : "ul";
+      if (listType !== want) {
+        closeList();
+        out.push(
+          want === "ol"
+            ? "<ol class='list-decimal pl-5 space-y-1 my-1'>"
+            : "<ul class='list-disc pl-5 space-y-1 my-1'>",
+        );
+        listType = want;
       }
       const stripped = line.replace(/^\s*([-*•]|\d+[.)])\s+/, "");
       out.push(`<li>${inline(stripped)}</li>`);
     } else {
-      if (inList) {
-        out.push(inList ? (out[out.length - 1]?.startsWith("<li") ? "" : "") : "");
-        out.push("</ul></ol>".includes("ol") ? "</ol>" : "</ul>");
-        inList = false;
-      }
+      closeList();
       if (line.trim() === "") out.push("<br/>");
       else out.push(`<p class='my-1'>${inline(line)}</p>`);
     }
   }
-  if (inList) out.push("</ul>");
+  closeList();
   return out.join("");
-
-  function inline(s: string) {
-    return s
-      .replace(/\*\*([^*]+)\*\*/g, "<strong class='text-gold'>$1</strong>")
-      .replace(/\*([^*]+)\*/g, "<em>$1</em>")
-      .replace(/`([^`]+)`/g, "<code class='px-1 rounded bg-secondary/60 text-xs'>$1</code>");
-  }
 }
 
 function MessageBubble({ msg }: { msg: Msg }) {
