@@ -5,6 +5,7 @@ import { Diagnose } from "@/components/plantiq/Diagnose";
 import { Features } from "@/components/plantiq/Features";
 import { Elkar } from "@/components/plantiq/Elkar";
 import { Pricing } from "@/components/plantiq/Pricing";
+import { Newsletter } from "@/components/plantiq/Newsletter";
 import { Footer } from "@/components/plantiq/Footer";
 
 export const Route = createFileRoute("/")({
@@ -20,6 +21,7 @@ function Index() {
       <Elkar />
       <Features />
       <Pricing />
+      <Newsletter />
       <Footer />
     </main>
   );
