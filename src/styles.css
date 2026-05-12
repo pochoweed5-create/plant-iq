@@ -38,37 +38,38 @@
 :root {
   --radius: 0.875rem;
 
-  /* Plant IQ — Verde Bosque + Dorado, dark by default */
-  --background: oklch(0.18 0.03 155);
+  /* VERDARA — Matte Black + Neon Botanical Green, dark by default */
+  --background: oklch(0.13 0.012 155);
   --foreground: oklch(0.96 0.015 95);
 
-  --card: oklch(0.22 0.035 155);
+  --card: oklch(0.18 0.018 155);
   --card-foreground: oklch(0.96 0.015 95);
 
-  --popover: oklch(0.22 0.035 155);
+  --popover: oklch(0.18 0.018 155);
   --popover-foreground: oklch(0.96 0.015 95);
 
-  --primary: oklch(0.55 0.13 152);
+  --primary: oklch(0.78 0.22 142);
   --primary-foreground: oklch(0.14 0.02 155);
 
-  --secondary: oklch(0.28 0.04 155);
+  --secondary: oklch(0.22 0.018 155);
   --secondary-foreground: oklch(0.96 0.015 95);
 
-  --muted: oklch(0.26 0.025 155);
-  --muted-foreground: oklch(0.72 0.025 120);
+  --muted: oklch(0.2 0.012 155);
+  --muted-foreground: oklch(0.72 0.02 130);
 
-  --accent: oklch(0.32 0.05 152);
+  --accent: oklch(0.26 0.04 145);
   --accent-foreground: oklch(0.96 0.015 95);
 
-  --gold: oklch(0.78 0.13 85);
-  --gold-foreground: oklch(0.16 0.02 155);
+  /* Brand neon green (kept under --gold token name for backwards compat) */
+  --gold: oklch(0.82 0.21 142);
+  --gold-foreground: oklch(0.12 0.02 155);
 
   --destructive: oklch(0.62 0.22 27);
   --destructive-foreground: oklch(0.98 0.01 95);
 
-  --border: oklch(0.32 0.03 155 / 60%);
-  --input: oklch(0.28 0.03 155);
-  --ring: oklch(0.78 0.13 85);
+  --border: oklch(0.32 0.04 145 / 45%);
+  --input: oklch(0.22 0.02 155);
+  --ring: oklch(0.82 0.21 142);
 
   --sidebar: var(--card);
   --sidebar-foreground: var(--foreground);
@@ -80,12 +81,13 @@
   --sidebar-ring: var(--ring);
 
   /* Brand tokens */
-  --gradient-hero: radial-gradient(ellipse at 70% 30%, oklch(0.32 0.07 152 / 0.6), transparent 60%),
-                   linear-gradient(180deg, oklch(0.16 0.03 155) 0%, oklch(0.12 0.025 155) 100%);
-  --gradient-gold: linear-gradient(135deg, oklch(0.82 0.14 85) 0%, oklch(0.68 0.12 75) 100%);
-  --gradient-leaf: linear-gradient(135deg, oklch(0.32 0.08 152) 0%, oklch(0.22 0.04 155) 100%);
-  --shadow-elegant: 0 30px 80px -20px oklch(0 0 0 / 0.6), 0 0 0 1px oklch(0.78 0.13 85 / 0.08);
-  --shadow-gold-glow: 0 0 60px -10px oklch(0.78 0.13 85 / 0.35);
+  --gradient-hero: radial-gradient(ellipse at 70% 30%, oklch(0.45 0.18 142 / 0.35), transparent 60%),
+                   radial-gradient(ellipse at 20% 80%, oklch(0.35 0.12 142 / 0.25), transparent 55%),
+                   linear-gradient(180deg, oklch(0.10 0.012 155) 0%, oklch(0.07 0.008 155) 100%);
+  --gradient-gold: linear-gradient(135deg, oklch(0.86 0.22 142) 0%, oklch(0.68 0.20 145) 100%);
+  --gradient-leaf: linear-gradient(135deg, oklch(0.22 0.03 145) 0%, oklch(0.14 0.012 155) 100%);
+  --shadow-elegant: 0 30px 80px -20px oklch(0 0 0 / 0.7), 0 0 0 1px oklch(0.82 0.21 142 / 0.10);
+  --shadow-gold-glow: 0 0 70px -10px oklch(0.82 0.21 142 / 0.45);
   --shadow-card: 0 10px 30px -10px oklch(0 0 0 / 0.5);
   --transition-smooth: cubic-bezier(0.22, 1, 0.36, 1);
 }
