@@ -18,13 +18,14 @@ import {
   Menu,
 } from "lucide-react";
 import { chatWithElkar, type ElkarChatMessage } from "@/utils/elkar-chat.functions";
+import verdaraLogo from "@/assets/verdara-logo.png";
 
 export const Route = createFileRoute("/chat")({
   component: ChatPage,
   head: () => ({
     meta: [
-      { title: "ELKAR · Mentor Botánico IA · PlantIQ" },
-      { name: "description", content: "Habla con ELKAR, tu mentor botánico IA experto en cultivo de cannabis. Diagnóstico por foto, plan nutricional y acompañamiento 24/7." },
+      { title: "ELKAR · Mentor Botánico IA · VERDARA" },
+      { name: "description", content: "Habla con ELKAR, el mentor botánico IA de VERDARA. Diagnóstico por foto, plan nutricional y acompañamiento 24/7." },
     ],
   }),
 });
@@ -397,17 +398,17 @@ function ChatPage() {
               <Menu className="h-4 w-4" />
             </button>
             <div className="flex items-center gap-3 min-w-0">
-              <span className="relative h-9 w-9 rounded-full bg-leaf-card border border-gold/30 flex items-center justify-center flex-shrink-0">
-                <Leaf className="h-4 w-4 text-gold" />
-                <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-emerald-400 border-2 border-background animate-pulse" />
+              <span className="relative h-9 w-9 rounded-xl bg-leaf-card border border-gold/30 overflow-hidden flex-shrink-0 shadow-gold-glow">
+                <img src={verdaraLogo} alt="VERDARA" className="h-9 w-9 object-cover scale-[1.6]" />
+                <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-gold border-2 border-background animate-pulse" />
               </span>
               <div className="min-w-0">
-                <div className="font-serif text-base leading-tight truncate">
-                  ELKAR <span className="text-gold italic">AI</span>
+                <div className="font-sans text-sm tracking-[0.28em] leading-tight truncate">
+                  ELKAR <span className="text-gold">AI</span>
                 </div>
-                <div className="text-[10px] uppercase tracking-[0.2em] text-emerald-400/90 flex items-center gap-1.5">
-                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
-                  Mentor Botánico · Conectado
+                <div className="text-[10px] uppercase tracking-[0.2em] text-gold/90 flex items-center gap-1.5">
+                  <span className="h-1.5 w-1.5 rounded-full bg-gold" />
+                  VERDARA · Conectado
                 </div>
               </div>
             </div>

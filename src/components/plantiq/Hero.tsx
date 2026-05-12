@@ -19,20 +19,20 @@ export function Hero() {
 
       <div className="relative max-w-6xl mx-auto px-5 sm:px-8">
         <div className="max-w-2xl">
-          <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-gold/30 bg-card/40 backdrop-blur text-xs uppercase tracking-[0.18em] text-gold">
-            <Sparkles className="h-3.5 w-3.5" /> ELKAR AI · Diagnóstico botánico
+          <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-gold/30 bg-card/40 backdrop-blur text-xs uppercase tracking-[0.22em] text-gold">
+            <Sparkles className="h-3.5 w-3.5" /> VERDARA · Grow Intelligence
           </span>
 
           <h1 className="mt-6 font-serif text-5xl sm:text-7xl leading-[1.02] tracking-tight">
-            Tu planta habla.
+            Inteligencia botánica.
             <br />
-            <span className="shimmer-gold italic">Nosotros traducimos.</span>
+            <span className="shimmer-gold italic">Para cada planta.</span>
           </h1>
 
           <p className="mt-6 text-lg text-muted-foreground max-w-xl leading-relaxed">
-            Sube una foto y descubre en segundos qué le pasa a tu cultivo.
-            Diagnóstico inteligente con IA, soluciones paso a paso y un mentor
-            experto en cannabis siempre a tu lado.
+            VERDARA es el sistema operativo con IA para cultivadores.
+            Diagnóstico por imagen, mentor ELKAR 24/7 y analítica botánica
+            de nivel laboratorio — en tu bolsillo.
           </p>
 
           <div className="mt-10 flex flex-col sm:flex-row items-start sm:items-center gap-4">
