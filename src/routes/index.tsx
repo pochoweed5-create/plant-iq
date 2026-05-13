@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Nav } from "@/components/plantiq/Nav";
 import { Hero } from "@/components/plantiq/Hero";
 import { Diagnose } from "@/components/plantiq/Diagnose";
+import { WhyVerdara } from "@/components/plantiq/WhyVerdara";
 import { Features } from "@/components/plantiq/Features";
 import { Elkar } from "@/components/plantiq/Elkar";
 import { Pricing } from "@/components/plantiq/Pricing";
@@ -17,6 +18,7 @@ function Index() {
     <main className="min-h-screen bg-background text-foreground">
       <Nav />
       <Hero />
+      <WhyVerdara />
       <Diagnose />
       <Elkar />
       <Features />
