@@ -3,6 +3,7 @@ import { Nav } from "@/components/plantiq/Nav";
 import { Hero } from "@/components/plantiq/Hero";
 import { Diagnose } from "@/components/plantiq/Diagnose";
 import { WhyVerdara } from "@/components/plantiq/WhyVerdara";
+import { PestScan } from "@/components/plantiq/PestScan";
 import { Features } from "@/components/plantiq/Features";
 import { Elkar } from "@/components/plantiq/Elkar";
 import { Pricing } from "@/components/plantiq/Pricing";
@@ -20,6 +21,7 @@ function Index() {
       <Hero />
       <WhyVerdara />
       <Diagnose />
+      <PestScan />
       <Elkar />
       <Features />
       <Pricing />
