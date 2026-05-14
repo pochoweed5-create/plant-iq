@@ -104,18 +104,18 @@ export function Hero() {
 
           <div className="mt-9 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
             <a
-              href="#diagnostico"
+              href="#newsletter"
               className="group relative inline-flex items-center justify-center gap-2 px-7 py-4 rounded-full bg-gold text-gold-foreground font-medium shadow-gold-glow hover:scale-[1.02] active:scale-[0.99] transition-smooth overflow-hidden"
             >
               <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/25 to-transparent" />
-              <span className="relative">Diagnosticar mi planta</span>
+              <span className="relative">Probar beta privada</span>
               <ArrowRight className="relative h-4 w-4 group-hover:translate-x-0.5 transition-smooth" />
             </a>
             <a
-              href="#elkar"
-              className="text-sm text-muted-foreground hover:text-foreground transition-smooth underline-offset-4 hover:underline text-center sm:text-left"
+              href="#wow-demo"
+              className="inline-flex items-center justify-center gap-2 px-6 py-4 rounded-full border border-gold/30 bg-card/40 backdrop-blur text-sm text-foreground/90 hover:border-gold/60 hover:bg-card/70 transition-smooth"
             >
-              Conoce a ELKAR →
+              Ver demo IA →
             </a>
           </div>
 
