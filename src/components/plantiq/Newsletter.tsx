@@ -22,8 +22,8 @@ export function Newsletter() {
     setStatus("loading");
 
     const { error: insertError } = await supabase
-      .from("beta_users")
-      .insert({ email: parsed.data.toLowerCase() });
+      .from("usuarios_beta")
+      .insert({ correo_electronico: parsed.data.toLowerCase() });
 
     if (insertError) {
       // 23505 = unique_violation → ya estaba registrado, lo tratamos como éxito
