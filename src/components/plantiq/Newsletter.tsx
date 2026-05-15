@@ -132,7 +132,9 @@ export function Newsletter() {
                 {status === "error" && error ? (
                   <span className="text-destructive">{error}</span>
                 ) : status === "success" ? (
-                  <span className="text-gold">Bienvenido al Códex. Revisa tu bandeja.</span>
+                  <span className="text-gold animate-fade-in">
+                    ✅ ELKAR te ha añadido a la beta privada.
+                  </span>
                 ) : (
                   <span className="text-muted-foreground inline-flex items-center gap-1.5">
                     <ShieldCheck className="h-3.5 w-3.5" />
