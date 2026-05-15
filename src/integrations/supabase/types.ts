@@ -32,6 +32,24 @@ export type Database = {
         }
         Relationships: []
       }
+      usuarios_beta: {
+        Row: {
+          correo_electronico: string
+          creado_en: string
+          id: string
+        }
+        Insert: {
+          correo_electronico: string
+          creado_en?: string
+          id?: string
+        }
+        Update: {
+          correo_electronico?: string
+          creado_en?: string
+          id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
