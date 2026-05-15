@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Mail, Sparkles, ArrowRight, ShieldCheck, Check } from "lucide-react";
 import { z } from "zod";
+import { supabase } from "@/integrations/supabase/client";
 
 const emailSchema = z.string().trim().email("Introduce un email válido").max(255);
 
@@ -9,7 +10,7 @@ export function Newsletter() {
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [error, setError] = useState<string | null>(null);
 
-  function onSubmit(e: React.FormEvent) {
+  async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     const parsed = emailSchema.safeParse(email);
     if (!parsed.success) {
@@ -19,8 +20,25 @@ export function Newsletter() {
     }
     setError(null);
     setStatus("loading");
-    // Simulated submit — wire up to backend later
-    setTimeout(() => setStatus("success"), 700);
+
+    const { error: insertError } = await supabase
+      .from("beta_users")
+      .insert({ email: parsed.data.toLowerCase() });
+
+    if (insertError) {
+      // 23505 = unique_violation → ya estaba registrado, lo tratamos como éxito
+      if (insertError.code === "23505") {
+        setEmail("");
+        setStatus("success");
+        return;
+      }
+      setError("No se pudo completar el registro. Inténtalo de nuevo.");
+      setStatus("error");
+      return;
+    }
+
+    setEmail("");
+    setStatus("success");
   }
 
   return (
