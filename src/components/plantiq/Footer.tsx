@@ -8,7 +8,7 @@ export function Footer() {
           <span className="h-8 w-8 rounded-lg bg-leaf-card border border-gold/30 flex items-center justify-center overflow-hidden">
             <img src={logo.url} alt="ELKARION" className="h-8 w-8 object-cover scale-[1.6]" />
           </span>
-          <span className="font-sans tracking-[0.3em] text-sm">VER<span className="text-gold">D</span>ARA</span>
+          <span className="font-sans tracking-[0.26em] text-sm">ELKAR<span className="text-gold">I</span>ON</span>
         </div>
         <p className="text-xs text-muted-foreground">
           © {new Date().getFullYear()} ELKARION · Grow Intelligence · ELKAR AI
