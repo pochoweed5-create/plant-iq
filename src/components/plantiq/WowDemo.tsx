@@ -137,7 +137,7 @@ export function WowDemo() {
               <div className="relative flex-shrink-0">
                 <span className="absolute inset-0 rounded-full bg-gold/30 blur-md animate-pulse-soft" />
                 <span className="relative flex h-11 w-11 items-center justify-center rounded-full bg-leaf-card border border-gold/40 overflow-hidden shadow-gold-glow">
-                  <img src={logo} alt="ELKAR" className="h-11 w-11 object-cover scale-[1.6]" />
+                  <img src={logo.url} alt="ELKAR" className="h-11 w-11 object-cover scale-[1.6]" />
                 </span>
               </div>
               <div>

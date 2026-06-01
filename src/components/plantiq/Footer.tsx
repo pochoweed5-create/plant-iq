@@ -6,7 +6,7 @@ export function Footer() {
       <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
         <div className="flex items-center gap-2.5">
           <span className="h-8 w-8 rounded-lg bg-leaf-card border border-gold/30 flex items-center justify-center overflow-hidden">
-            <img src={logo} alt="ELKARION" className="h-8 w-8 object-cover scale-[1.6]" />
+            <img src={logo.url} alt="ELKARION" className="h-8 w-8 object-cover scale-[1.6]" />
           </span>
           <span className="font-sans tracking-[0.3em] text-sm">VER<span className="text-gold">D</span>ARA</span>
         </div>

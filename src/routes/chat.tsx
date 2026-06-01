@@ -399,7 +399,7 @@ function ChatPage() {
             </button>
             <div className="flex items-center gap-3 min-w-0">
               <span className="relative h-9 w-9 rounded-xl bg-leaf-card border border-gold/30 overflow-hidden flex-shrink-0 shadow-gold-glow">
-                <img src={elkarionLogo} alt="ELKARION" className="h-9 w-9 object-cover scale-[1.6]" />
+                <img src={elkarionLogo.url} alt="ELKARION" className="h-9 w-9 object-cover scale-[1.6]" />
                 <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-gold border-2 border-background animate-pulse" />
               </span>
               <div className="min-w-0">
