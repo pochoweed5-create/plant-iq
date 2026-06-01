@@ -314,8 +314,8 @@ function ChatPage() {
             <span className="h-8 w-8 rounded-full bg-leaf-card border border-gold/30 flex items-center justify-center">
               <Leaf className="h-3.5 w-3.5 text-gold" />
             </span>
-            <span className="font-serif text-lg">
-              Plant<span className="text-gold">IQ</span>
+            <span className="font-sans text-sm tracking-[0.24em] font-light">
+              ELKAR<span className="text-gold">I</span>ON
             </span>
           </div>
           <button
