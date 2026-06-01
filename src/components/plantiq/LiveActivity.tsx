@@ -34,14 +34,14 @@ export function LiveActivity() {
 
       <div className="relative max-w-6xl mx-auto grid lg:grid-cols-[1fr_1.1fr] gap-10 items-center">
         <div>
-          <span className="text-xs uppercase tracking-[0.2em] text-gold">VERDARA en vivo</span>
+          <span className="text-xs uppercase tracking-[0.2em] text-gold">ELKARION en vivo</span>
           <h2 className="font-serif text-3xl sm:text-4xl mt-4 leading-tight">
             <span className="shimmer-gold italic">{count.toLocaleString("es-ES")}</span>
             <br />
             diagnósticos realizados.
           </h2>
           <p className="mt-5 text-sm sm:text-base text-muted-foreground leading-relaxed max-w-md">
-            La IA botánica de VERDARA aprende cada día con cultivadores reales.
+            La IA botánica de ELKARION aprende cada día con cultivadores reales.
             Cada hoja analizada hace al modelo más preciso.
           </p>
 

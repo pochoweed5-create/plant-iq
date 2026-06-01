@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import logo from "@/assets/verdara-logo.png";
+import logo from "@/assets/elkarion-logo.png.asset.json";
 
 export function Nav() {
   return (
@@ -7,9 +7,9 @@ export function Nav() {
       <div className="max-w-6xl mx-auto px-5 sm:px-8 h-16 flex items-center justify-between">
         <a href="#top" className="flex items-center gap-2.5 group">
           <span className="relative inline-flex h-9 w-9 items-center justify-center rounded-xl bg-leaf-card border border-gold/30 overflow-hidden shadow-gold-glow">
-            <img src={logo} alt="VERDARA" className="h-9 w-9 object-cover scale-[1.6]" />
+            <img src={logo.url} alt="ELKARION" className="h-9 w-9 object-cover scale-[1.6]" />
           </span>
-          <span className="font-sans text-base tracking-[0.32em] font-light">VER<span className="text-gold">D</span>ARA</span>
+          <span className="font-sans text-base tracking-[0.28em] font-light">ELKAR<span className="text-gold">I</span>ON</span>
         </a>
         <nav className="hidden md:flex items-center gap-8 text-sm text-muted-foreground">
           <a href="#diagnostico" className="hover:text-foreground transition-smooth">Diagnóstico</a>

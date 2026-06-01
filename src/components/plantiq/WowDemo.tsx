@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Upload, Scan, Sparkles, AlertTriangle, Activity, ShieldCheck } from "lucide-react";
 import heroLeaf from "@/assets/hero-leaf.jpg";
-import logo from "@/assets/verdara-logo.png";
+import logo from "@/assets/elkarion-logo.png.asset.json";
 
 const steps = [
   { icon: Upload, label: "Subiendo imagen…", detail: "hoja_planta.jpg · 2.1MB" },
@@ -59,7 +59,7 @@ export function WowDemo() {
         <div className="max-w-2xl mb-12">
           <span className="text-xs uppercase tracking-[0.2em] text-gold">Demo IA · En vivo</span>
           <h2 className="font-serif text-4xl sm:text-5xl mt-4 leading-tight">
-            Sube una foto. <span className="italic shimmer-gold">VERDARA hace el resto.</span>
+            Sube una foto. <span className="italic shimmer-gold">ELKARION hace el resto.</span>
           </h2>
           <p className="mt-5 text-base sm:text-lg text-muted-foreground leading-relaxed">
             Mira cómo la IA escanea, detecta y diagnostica el daño en segundos —
@@ -90,7 +90,7 @@ export function WowDemo() {
 
               {/* HUD top */}
               <div className="absolute top-3 left-3 right-3 flex items-center justify-between text-[10px] uppercase tracking-[0.2em]">
-                <span className="px-2 py-1 rounded-full bg-background/70 border border-gold/30 text-gold backdrop-blur">VERDARA · Scan</span>
+                <span className="px-2 py-1 rounded-full bg-background/70 border border-gold/30 text-gold backdrop-blur">ELKARION · Scan</span>
                 <span className="px-2 py-1 rounded-full bg-background/70 border border-border/60 text-foreground/80 backdrop-blur flex items-center gap-1">
                   <Activity className="h-3 w-3 text-gold" /> en vivo
                 </span>
@@ -137,7 +137,7 @@ export function WowDemo() {
               <div className="relative flex-shrink-0">
                 <span className="absolute inset-0 rounded-full bg-gold/30 blur-md animate-pulse-soft" />
                 <span className="relative flex h-11 w-11 items-center justify-center rounded-full bg-leaf-card border border-gold/40 overflow-hidden shadow-gold-glow">
-                  <img src={logo} alt="ELKAR" className="h-11 w-11 object-cover scale-[1.6]" />
+                  <img src={logo.url} alt="ELKAR" className="h-11 w-11 object-cover scale-[1.6]" />
                 </span>
               </div>
               <div>

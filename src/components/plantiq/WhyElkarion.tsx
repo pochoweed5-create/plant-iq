@@ -9,7 +9,7 @@ const blocks = [
   { icon: Sparkles, title: "Mentor ELKAR 24/7", desc: "Consejos personalizados según fase, especie y entorno." },
 ];
 
-export function WhyVerdara() {
+export function WhyElkarion() {
   return (
     <section className="relative py-24 sm:py-32 px-5 sm:px-8 border-t border-border/40 overflow-hidden">
       <div className="absolute inset-0 -z-0 opacity-40">
@@ -18,12 +18,12 @@ export function WhyVerdara() {
 
       <div className="relative max-w-6xl mx-auto">
         <div className="max-w-2xl mb-14 sm:mb-16">
-          <span className="text-xs uppercase tracking-[0.2em] text-gold">¿Por qué VERDARA?</span>
+          <span className="text-xs uppercase tracking-[0.2em] text-gold">¿Por qué ELKARION?</span>
           <h2 className="font-serif text-4xl sm:text-5xl mt-4 leading-tight">
             Protege tus plantas <span className="italic shimmer-gold">antes de que sea tarde.</span>
           </h2>
           <p className="mt-5 text-base sm:text-lg text-muted-foreground leading-relaxed">
-            Cada hoja cuenta una historia. VERDARA la traduce en datos, alertas
+            Cada hoja cuenta una historia. ELKARION la traduce en datos, alertas
             y acciones concretas para que nunca más cultives a ciegas.
           </p>
         </div>
