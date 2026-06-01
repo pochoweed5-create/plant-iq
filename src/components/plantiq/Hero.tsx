@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import heroLeaf from "@/assets/hero-leaf.jpg";
-import logo from "@/assets/verdara-logo.png";
+import logo from "@/assets/elkarion-logo.png.asset.json";
 import { Sparkles, ArrowRight, Activity } from "lucide-react";
 
 const elkarMessages = [
@@ -63,13 +63,13 @@ export function Hero() {
       <div className="relative max-w-6xl mx-auto px-5 sm:px-8">
         <div className="max-w-3xl">
           <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-gold/30 bg-card/50 backdrop-blur text-[10px] sm:text-xs uppercase tracking-[0.22em] text-gold">
-            <Sparkles className="h-3.5 w-3.5" /> VERDARA · Grow Intelligence
+            <Sparkles className="h-3.5 w-3.5" /> ELKARION · Grow Intelligence
           </span>
 
           <h1 className="mt-6 font-serif text-[2.6rem] leading-[1.02] sm:text-7xl tracking-tight">
             Tu planta habla.
             <br />
-            <span className="shimmer-gold italic">VERDARA la entiende.</span>
+            <span className="shimmer-gold italic">ELKARION la entiende.</span>
           </h1>
 
           <p className="mt-6 text-base sm:text-lg text-foreground/80 max-w-xl leading-relaxed">

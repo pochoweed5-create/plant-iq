@@ -18,14 +18,14 @@ import {
   Menu,
 } from "lucide-react";
 import { chatWithElkar, type ElkarChatMessage } from "@/utils/elkar-chat.functions";
-import verdaraLogo from "@/assets/verdara-logo.png";
+import elkarionLogo from "@/assets/elkarion-logo.png.asset.json";
 
 export const Route = createFileRoute("/chat")({
   component: ChatPage,
   head: () => ({
     meta: [
-      { title: "ELKAR · Mentor Botánico IA · VERDARA" },
-      { name: "description", content: "Habla con ELKAR, el mentor botánico IA de VERDARA. Diagnóstico por foto, plan nutricional y acompañamiento 24/7." },
+      { title: "ELKAR · Mentor Botánico IA · ELKARION" },
+      { name: "description", content: "Habla con ELKAR, el mentor botánico IA de ELKARION. Diagnóstico por foto, plan nutricional y acompañamiento 24/7." },
     ],
   }),
 });
@@ -399,7 +399,7 @@ function ChatPage() {
             </button>
             <div className="flex items-center gap-3 min-w-0">
               <span className="relative h-9 w-9 rounded-xl bg-leaf-card border border-gold/30 overflow-hidden flex-shrink-0 shadow-gold-glow">
-                <img src={verdaraLogo} alt="VERDARA" className="h-9 w-9 object-cover scale-[1.6]" />
+                <img src={elkarionLogo} alt="ELKARION" className="h-9 w-9 object-cover scale-[1.6]" />
                 <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-gold border-2 border-background animate-pulse" />
               </span>
               <div className="min-w-0">
@@ -408,7 +408,7 @@ function ChatPage() {
                 </div>
                 <div className="text-[10px] uppercase tracking-[0.2em] text-gold/90 flex items-center gap-1.5">
                   <span className="h-1.5 w-1.5 rounded-full bg-gold" />
-                  VERDARA · Conectado
+                  ELKARION · Conectado
                 </div>
               </div>
             </div>

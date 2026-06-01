@@ -3,7 +3,7 @@ import { Nav } from "@/components/plantiq/Nav";
 import { Hero } from "@/components/plantiq/Hero";
 import { WowDemo } from "@/components/plantiq/WowDemo";
 import { Diagnose } from "@/components/plantiq/Diagnose";
-import { WhyVerdara } from "@/components/plantiq/WhyVerdara";
+import { WhyElkarion } from "@/components/plantiq/WhyElkarion";
 import { PestScan } from "@/components/plantiq/PestScan";
 import { LiveActivity } from "@/components/plantiq/LiveActivity";
 import { Features } from "@/components/plantiq/Features";
@@ -22,7 +22,7 @@ function Index() {
       <Nav />
       <Hero />
       <WowDemo />
-      <WhyVerdara />
+      <WhyElkarion />
       <Diagnose />
       <PestScan />
       <LiveActivity />

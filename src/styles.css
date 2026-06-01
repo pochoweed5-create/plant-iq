@@ -38,7 +38,7 @@
 :root {
   --radius: 0.875rem;
 
-  /* VERDARA — Matte Black + Neon Botanical Green, dark by default */
+  /* ELKARION — Matte Black + Neon Botanical Green, dark by default */
   --background: oklch(0.13 0.012 155);
   --foreground: oklch(0.96 0.015 95);
 

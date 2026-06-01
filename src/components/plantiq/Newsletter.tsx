@@ -85,7 +85,7 @@ export function Newsletter() {
             </h2>
 
             <p className="mt-6 text-base sm:text-lg text-muted-foreground max-w-xl leading-relaxed">
-              Recibe diagnósticos IA, mejoras de VERDARA, consejos de cultivo y
+              Recibe diagnósticos IA, mejoras de ELKARION, consejos de cultivo y
               acceso anticipado a nuevas funciones — directo de nuestro laboratorio.
             </p>
 
@@ -180,7 +180,7 @@ export function Newsletter() {
                 <div className="flex items-center justify-between text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
                   <span className="inline-flex items-center gap-1.5 text-gold">
                     <span className="h-1.5 w-1.5 rounded-full bg-gold animate-pulse" />
-                    Códex VERDARA · #042
+                    Códex ELKARION · #042
                   </span>
                   <span>Vol. Botánico</span>
                 </div>

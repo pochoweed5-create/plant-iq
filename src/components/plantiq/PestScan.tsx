@@ -121,7 +121,7 @@ export function PestScan() {
             <span className="italic shimmer-gold">aunque el insecto no aparezca.</span>
           </h2>
           <p className="mt-5 text-base sm:text-lg text-muted-foreground leading-relaxed">
-            VERDARA analiza mordidas, manchas, telarañas, deformaciones y patrones
+            ELKARION analiza mordidas, manchas, telarañas, deformaciones y patrones
             biológicos para identificar al culpable con probabilidad, gravedad y
             velocidad de propagación.
           </p>
