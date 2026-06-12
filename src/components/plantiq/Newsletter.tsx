@@ -44,7 +44,7 @@ export function Newsletter() {
   return (
     <section
       id="newsletter"
-      className="relative overflow-hidden border-t border-border/40 py-24 sm:py-32 px-5 sm:px-8"
+      className="relative overflow-hidden border-t border-border/40 py-14 sm:py-20 px-5 sm:px-8"
     >
       {/* Botanical blurred backdrop */}
       <div className="pointer-events-none absolute inset-0 -z-10">

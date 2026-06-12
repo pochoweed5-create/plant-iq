@@ -11,7 +11,7 @@ const features = [
 
 export function Features() {
   return (
-    <section id="features" className="relative py-24 sm:py-32 px-5 sm:px-8 border-t border-border/40">
+    <section id="features" className="relative py-14 sm:py-20 px-5 sm:px-8 border-t border-border/40">
       <div className="max-w-6xl mx-auto">
         <div className="max-w-2xl mb-16">
           <span className="text-xs uppercase tracking-[0.2em] text-gold">Todo en una app</span>

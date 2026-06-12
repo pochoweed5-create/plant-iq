@@ -2,7 +2,7 @@ import { MessageCircle } from "lucide-react";
 
 export function Elkar() {
   return (
-    <section id="elkar" className="relative py-24 sm:py-32 px-5 sm:px-8 border-t border-border/40 overflow-hidden">
+    <section id="elkar" className="relative py-14 sm:py-20 px-5 sm:px-8 border-t border-border/40 overflow-hidden">
       <div className="absolute inset-0 -z-0 opacity-60">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-gold/5 blur-[120px]" />
       </div>

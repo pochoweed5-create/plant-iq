@@ -11,7 +11,7 @@ const blocks = [
 
 export function WhyElkarion() {
   return (
-    <section className="relative py-24 sm:py-32 px-5 sm:px-8 border-t border-border/40 overflow-hidden">
+    <section className="relative py-14 sm:py-20 px-5 sm:px-8 border-t border-border/40 overflow-hidden">
       <div className="absolute inset-0 -z-0 opacity-40">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] rounded-full bg-gold/5 blur-[140px]" />
       </div>

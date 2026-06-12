@@ -102,7 +102,7 @@ export function PestScan() {
   return (
     <section
       id="pestscan"
-      className="relative py-24 sm:py-32 px-5 sm:px-8 border-t border-border/40 overflow-hidden"
+      className="relative py-14 sm:py-20 px-5 sm:px-8 border-t border-border/40 overflow-hidden"
     >
       {/* Ambient backdrop */}
       <div className="absolute inset-0 -z-0 pointer-events-none">

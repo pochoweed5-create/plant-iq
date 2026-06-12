@@ -368,7 +368,7 @@ export function Diagnose() {
   }
 
   return (
-    <section id="diagnostico" className="relative py-24 sm:py-32 px-5 sm:px-8">
+    <section id="diagnostico" className="relative py-14 sm:py-20 px-5 sm:px-8">
       <div className="max-w-5xl mx-auto">
         <div className="text-center mb-12">
           <span className="text-xs uppercase tracking-[0.2em] text-gold">Diagnóstico instantáneo</span>
