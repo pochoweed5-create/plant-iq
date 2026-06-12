@@ -149,27 +149,63 @@ export function PestScan() {
             </div>
 
             {!preview ? (
-              <label className="block cursor-pointer p-8 sm:p-10">
-                <div className="rounded-2xl border-2 border-dashed border-gold/30 bg-leaf-card/40 p-10 text-center hover:border-gold/60 transition-smooth">
-                  <div className="mx-auto h-12 w-12 rounded-xl bg-gold/10 border border-gold/30 flex items-center justify-center mb-4">
-                    <Upload className="h-5 w-5 text-gold" />
+              <div className="p-5 sm:p-6 space-y-5">
+                <label className="block cursor-pointer">
+                  <div className="rounded-2xl border-2 border-dashed border-gold/30 bg-leaf-card/40 p-8 text-center hover:border-gold/60 transition-smooth">
+                    <div className="mx-auto h-12 w-12 rounded-xl bg-gold/10 border border-gold/30 flex items-center justify-center mb-4">
+                      <Upload className="h-5 w-5 text-gold" />
+                    </div>
+                    <div className="font-serif text-xl">Sube una hoja sospechosa</div>
+                    <p className="mt-2 text-sm text-muted-foreground max-w-xs mx-auto">
+                      Mordidas, manchas, agujeros o decoloración. La IA hace el resto.
+                    </p>
+                    <span className="inline-flex mt-5 items-center gap-2 px-5 py-2.5 rounded-full bg-gold text-gold-foreground text-sm font-medium shadow-gold-glow">
+                      <ScanLine className="h-4 w-4" /> Iniciar escáner
+                    </span>
                   </div>
-                  <div className="font-serif text-xl">Sube una hoja sospechosa</div>
-                  <p className="mt-2 text-sm text-muted-foreground max-w-xs mx-auto">
-                    Mordidas, manchas, agujeros o decoloración. La IA hace el resto.
-                  </p>
-                  <span className="inline-flex mt-5 items-center gap-2 px-5 py-2.5 rounded-full bg-gold text-gold-foreground text-sm font-medium shadow-gold-glow">
-                    <ScanLine className="h-4 w-4" /> Iniciar escáner
-                  </span>
+                  <input
+                    ref={inputRef}
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={(e) => e.target.files?.[0] && onFile(e.target.files[0])}
+                  />
+                </label>
+
+                {/* Example demo preview when idle */}
+                <div className="rounded-2xl border border-gold/15 bg-background/40 p-4">
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-[10px] uppercase tracking-[0.2em] text-gold flex items-center gap-1.5">
+                      <Sparkles className="h-3 w-3" /> Última detección · demo
+                    </span>
+                    <span className="text-[10px] uppercase tracking-wider text-emerald-300">·  Confianza 94%</span>
+                  </div>
+                  <div className="grid grid-cols-3 gap-2">
+                    {[
+                      { name: "Trips", val: "Severidad media", tone: "text-amber-300", border: "border-amber-400/40" },
+                      { name: "Mosca blanca", val: "Riesgo bajo", tone: "text-emerald-300", border: "border-emerald-400/40" },
+                      { name: "Oídio", val: "Probabilidad 32%", tone: "text-sky-300", border: "border-sky-400/40" },
+                    ].map((d) => (
+                      <div key={d.name} className={`rounded-xl border ${d.border} bg-card/50 px-3 py-2.5`}>
+                        <div className="text-[11px] font-medium text-foreground/95">{d.name}</div>
+                        <div className={`text-[10px] mt-0.5 ${d.tone}`}>{d.val}</div>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="mt-3 grid grid-cols-3 gap-2">
+                    {[
+                      { k: "1.248", v: "Puntos analizados" },
+                      { k: "<2.4s", v: "Tiempo medio" },
+                      { k: "12.4k", v: "Refs biológicas" },
+                    ].map((s) => (
+                      <div key={s.v} className="text-center rounded-lg bg-leaf-card/60 border border-border/40 py-2">
+                        <div className="font-serif text-base text-gold">{s.k}</div>
+                        <div className="text-[9px] uppercase tracking-wider text-muted-foreground mt-0.5">{s.v}</div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-                <input
-                  ref={inputRef}
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  onChange={(e) => e.target.files?.[0] && onFile(e.target.files[0])}
-                />
-              </label>
+              </div>
             ) : (
               <div className="p-5 sm:p-6 space-y-5">
                 {/* Image with overlay */}
