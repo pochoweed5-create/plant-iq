@@ -139,6 +139,8 @@
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
   animation: shimmer 4s linear infinite;
 }
 
