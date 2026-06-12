@@ -69,7 +69,7 @@ export function Hero() {
           <h1 className="mt-6 font-serif text-[2.6rem] leading-[1.02] sm:text-7xl tracking-tight">
             Tu planta habla.
             <br />
-            <span className="shimmer-gold italic">ELKARION la entiende.</span>
+            <span className="text-gold italic">ELKARION la entiende.</span>
           </h1>
 
           <p className="mt-6 text-base sm:text-lg text-foreground/80 max-w-xl leading-relaxed">
