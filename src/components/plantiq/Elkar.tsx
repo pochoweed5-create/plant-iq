@@ -34,7 +34,7 @@ export function Elkar() {
         <div>
           <span className="text-xs uppercase tracking-[0.2em] text-gold">Voz botánica · IA</span>
           <h2 className="font-serif text-5xl sm:text-6xl mt-4 leading-[1.05]">
-            Tu planta <span className="italic shimmer-gold">habla</span>.
+            Tu planta <span className="italic text-gold">habla</span>.
             <br />
             ELKAR la traduce.
           </h2>

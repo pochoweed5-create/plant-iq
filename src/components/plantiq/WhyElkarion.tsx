@@ -20,7 +20,7 @@ export function WhyElkarion() {
         <div className="max-w-2xl mb-14 sm:mb-16">
           <span className="text-xs uppercase tracking-[0.2em] text-gold">¿Por qué ELKARION?</span>
           <h2 className="font-serif text-4xl sm:text-5xl mt-4 leading-tight">
-            Protege tus plantas <span className="italic shimmer-gold">antes de que sea tarde.</span>
+            Protege tus plantas <span className="italic text-gold">antes de que sea tarde.</span>
           </h2>
           <p className="mt-5 text-base sm:text-lg text-muted-foreground leading-relaxed">
             Cada hoja cuenta una historia. ELKARION la traduce en datos, alertas

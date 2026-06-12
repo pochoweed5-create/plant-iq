@@ -59,7 +59,7 @@ export function WowDemo() {
         <div className="max-w-2xl mb-12">
           <span className="text-xs uppercase tracking-[0.2em] text-gold">Demo IA · En vivo</span>
           <h2 className="font-serif text-4xl sm:text-5xl mt-4 leading-tight">
-            Sube una foto. <span className="italic shimmer-gold">ELKARION hace el resto.</span>
+            Sube una foto. <span className="italic text-gold">ELKARION hace el resto.</span>
           </h2>
           <p className="mt-5 text-base sm:text-lg text-muted-foreground leading-relaxed">
             Mira cómo la IA escanea, detecta y diagnostica el daño en segundos —

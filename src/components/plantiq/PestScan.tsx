@@ -118,7 +118,7 @@ export function PestScan() {
           </span>
           <h2 className="font-serif text-4xl sm:text-5xl mt-4 leading-tight">
             Detecta la plaga{" "}
-            <span className="italic shimmer-gold">aunque el insecto no aparezca.</span>
+            <span className="italic text-gold">aunque el insecto no aparezca.</span>
           </h2>
           <p className="mt-5 text-base sm:text-lg text-muted-foreground leading-relaxed">
             ELKARION analiza mordidas, manchas, telarañas, deformaciones y patrones
