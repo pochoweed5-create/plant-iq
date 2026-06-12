@@ -26,7 +26,7 @@ export function Hero() {
   return (
     <section
       id="top"
-      className="relative overflow-hidden bg-hero pt-28 pb-24 sm:pt-36 sm:pb-32 grain"
+      className="relative overflow-hidden bg-hero pt-24 pb-16 sm:pt-32 sm:pb-20 grain"
     >
       {/* Background imagery */}
       <div className="absolute inset-0 -z-0">
