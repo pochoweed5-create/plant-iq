@@ -11,7 +11,7 @@ const blocks = [
 
 export function WhyElkarion() {
   return (
-    <section className="relative py-24 sm:py-32 px-5 sm:px-8 border-t border-border/40 overflow-hidden">
+    <section className="relative py-14 sm:py-20 px-5 sm:px-8 border-t border-border/40 overflow-hidden">
       <div className="absolute inset-0 -z-0 opacity-40">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] rounded-full bg-gold/5 blur-[140px]" />
       </div>
@@ -20,7 +20,7 @@ export function WhyElkarion() {
         <div className="max-w-2xl mb-14 sm:mb-16">
           <span className="text-xs uppercase tracking-[0.2em] text-gold">¿Por qué ELKARION?</span>
           <h2 className="font-serif text-4xl sm:text-5xl mt-4 leading-tight">
-            Protege tus plantas <span className="italic shimmer-gold">antes de que sea tarde.</span>
+            Protege tus plantas <span className="italic text-gold">antes de que sea tarde.</span>
           </h2>
           <p className="mt-5 text-base sm:text-lg text-muted-foreground leading-relaxed">
             Cada hoja cuenta una historia. ELKARION la traduce en datos, alertas

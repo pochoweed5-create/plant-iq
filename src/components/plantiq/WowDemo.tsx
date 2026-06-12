@@ -49,7 +49,7 @@ export function WowDemo() {
   return (
     <section
       id="wow-demo"
-      className="relative overflow-hidden border-t border-border/40 py-24 sm:py-32 px-5 sm:px-8"
+      className="relative overflow-hidden border-t border-border/40 py-14 sm:py-20 px-5 sm:px-8"
     >
       <div className="absolute inset-0 -z-10 opacity-50">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] rounded-full bg-gold/5 blur-[160px]" />
@@ -59,7 +59,7 @@ export function WowDemo() {
         <div className="max-w-2xl mb-12">
           <span className="text-xs uppercase tracking-[0.2em] text-gold">Demo IA · En vivo</span>
           <h2 className="font-serif text-4xl sm:text-5xl mt-4 leading-tight">
-            Sube una foto. <span className="italic shimmer-gold">ELKARION hace el resto.</span>
+            Sube una foto. <span className="italic text-gold">ELKARION hace el resto.</span>
           </h2>
           <p className="mt-5 text-base sm:text-lg text-muted-foreground leading-relaxed">
             Mira cómo la IA escanea, detecta y diagnostica el daño en segundos —

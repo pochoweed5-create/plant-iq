@@ -44,7 +44,7 @@ export function Newsletter() {
   return (
     <section
       id="newsletter"
-      className="relative overflow-hidden border-t border-border/40 py-24 sm:py-32 px-5 sm:px-8"
+      className="relative overflow-hidden border-t border-border/40 py-14 sm:py-20 px-5 sm:px-8"
     >
       {/* Botanical blurred backdrop */}
       <div className="pointer-events-none absolute inset-0 -z-10">
@@ -81,7 +81,7 @@ export function Newsletter() {
             <h2 className="font-serif text-4xl sm:text-5xl lg:text-6xl leading-[1.04] tracking-tight">
               La inteligencia botánica
               <br />
-              <span className="shimmer-gold italic">evoluciona.</span>
+              <span className="text-gold italic">evoluciona.</span>
             </h2>
 
             <p className="mt-6 text-base sm:text-lg text-muted-foreground max-w-xl leading-relaxed">

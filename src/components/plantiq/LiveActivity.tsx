@@ -36,7 +36,7 @@ export function LiveActivity() {
         <div>
           <span className="text-xs uppercase tracking-[0.2em] text-gold">ELKARION en vivo</span>
           <h2 className="font-serif text-3xl sm:text-4xl mt-4 leading-tight">
-            <span className="shimmer-gold italic">{count.toLocaleString("es-ES")}</span>
+            <span className="text-gold italic">{count.toLocaleString("es-ES")}</span>
             <br />
             diagnósticos realizados.
           </h2>

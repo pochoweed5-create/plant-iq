@@ -26,7 +26,7 @@ export function Hero() {
   return (
     <section
       id="top"
-      className="relative overflow-hidden bg-hero pt-28 pb-24 sm:pt-36 sm:pb-32 grain"
+      className="relative overflow-hidden bg-hero pt-24 pb-16 sm:pt-32 sm:pb-20 grain"
     >
       {/* Background imagery */}
       <div className="absolute inset-0 -z-0">
@@ -69,7 +69,7 @@ export function Hero() {
           <h1 className="mt-6 font-serif text-[2.6rem] leading-[1.02] sm:text-7xl tracking-tight">
             Tu planta habla.
             <br />
-            <span className="shimmer-gold italic">ELKARION la entiende.</span>
+            <span className="text-gold italic">ELKARION la entiende.</span>
           </h1>
 
           <p className="mt-6 text-base sm:text-lg text-foreground/80 max-w-xl leading-relaxed">
